@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Bed Exit Alarm – Bangkok Hospital Pattaya</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --navy:#1B3A6B;--navy2:#24509A;--red:#C0272D;
+  --accent:#E8EEF8;--gray-header:#4A6FA5;
+  --border:#C5D3E8;--white:#fff;--bg:#EDF1F7;
+  --text:#1a2a3a;--green:#1a7a3c;--green-bg:#E6F4EC;
+  --shadow:0 4px 24px rgba(27,58,107,.13);--radius:8px;
+  --font:'Sarabun',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh}
+
+/* TOPBAR */
+.topbar{
+  background:linear-gradient(135deg,var(--navy) 0%,var(--navy2) 100%);
+  color:#fff;padding:12px 20px;
+  display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+  box-shadow:0 2px 12px rgba(0,0,0,.25);
+  position:sticky;top:0;z-index:100;
+}
+.logo-wrap{background:#fff;border-radius:6px;padding:6px 12px;display:flex;align-items:center;gap:8px;flex-shrink:0}
+.logo-text .bh{font-size:1rem;font-weight:800;color:var(--navy);line-height:1.1}
+.logo-text .pt{font-size:.65rem;font-weight:600;color:#888;letter-spacing:.12em}
+.topbar-title{flex:1;min-width:180px}
+.topbar-title h1{font-size:1rem;font-weight:700;line-height:1.3}
+.topbar-title p{font-size:.72rem;opacity:.8;margin-top:2px}
+.nav-tabs{display:flex;gap:5px;flex-wrap:wrap}
+.nav-btn{
+  background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);
+  color:#fff;padding:7px 14px;border-radius:5px;cursor:pointer;
+  font-family:var(--font);font-size:.8rem;font-weight:600;
+  transition:all .18s;white-space:nowrap;
+}
+.nav-btn:hover{background:rgba(255,255,255,.28)}
+.nav-btn.active{background:#fff;color:var(--navy)}
+
+/* DATE BAR */
+.date-bar{
+  background:#fff;border-bottom:2px solid var(--border);
+  padding:10px 20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+  box-shadow:0 2px 6px rgba(0,0,0,.06);
+}
+.date-bar label{font-size:.82rem;font-weight:700;color:var(--navy)}
+.date-bar input[type=date]{
+  border:1.5px solid var(--border);border-radius:5px;
+  padding:6px 10px;font-family:var(--font);font-size:.83rem;
+  color:var(--text);background:#f5f8ff;outline:none;cursor:pointer;
+}
+.date-bar input[type=date]:focus{border-color:var(--navy2)}
+.date-nav button{
+  background:var(--accent);border:1px solid var(--border);border-radius:4px;
+  padding:5px 10px;cursor:pointer;font-size:.9rem;color:var(--navy);
+}
+.date-nav button:hover{background:var(--border)}
+.date-display{font-size:.85rem;font-weight:600;color:var(--navy2)}
+
+/* MAIN */
+.main{max-width:1200px;margin:0 auto;padding:20px 16px 48px}
+
+/* SHIFT LABEL */
+.shift-label{display:flex;align-items:center;gap:12px;margin:20px 0 10px}
+.shift-badge{background:var(--navy);color:#fff;padding:5px 16px;border-radius:20px;font-size:.8rem;font-weight:700;white-space:nowrap}
+.shift-badge.night{background:#2d3a6b}
+.shift-line{flex:1;height:2px;background:var(--border)}
+
+/* FORM CARD */
+.form-card{background:#fff;border-radius:var(--radius);border:1px solid var(--border);box-shadow:var(--shadow);overflow:hidden;margin-bottom:4px}
+
+/* INFO GRID */
+.info-grid{display:grid;grid-template-columns:150px repeat(10,1fr);border-bottom:2px solid var(--navy)}
+.ig-label{
+  background:var(--gray-header);color:#fff;font-size:.73rem;font-weight:700;
+  padding:7px 10px;text-align:right;border-right:1px solid rgba(255,255,255,.2);
+  border-bottom:1px solid rgba(255,255,255,.12);
+  display:flex;align-items:center;justify-content:flex-end;
+}
+.ig-cell{border-right:1px solid var(--border);border-bottom:1px solid var(--border)}
+.ig-cell:last-child{border-right:none}
+.ig-cell input{
+  width:100%;min-height:32px;border:none;outline:none;
+  font-family:var(--font);font-size:.73rem;text-align:center;
+  background:#f0f5ff;color:var(--text);padding:4px 2px;
+  transition:background .12s;display:block;
+}
+.ig-cell input:focus{background:#d6e4ff}
+
+/* CHECK GRID */
+.check-grid{display:grid;grid-template-columns:150px repeat(10,1fr)}
+.check-grid-hdr{
+  grid-column:1/-1;background:var(--navy);color:#fff;
+  padding:8px 14px;font-size:.8rem;font-weight:700;
+  border-bottom:1px solid rgba(255,255,255,.12);
+}
+.ck-label{
+  padding:7px 10px;font-size:.72rem;font-weight:500;
+  display:flex;align-items:center;border-right:1px solid var(--border);
+  border-bottom:1px solid var(--border);line-height:1.4;background:#f8faff;
+}
+.ck-cell{
+  border-right:1px solid var(--border);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;min-height:36px;transition:background .12s;background:#fff;
+  user-select:none;
+}
+.ck-cell:last-child{border-right:none}
+.ck-cell:hover{background:#dceaf7}
+.ck-cell.checked{background:var(--green-bg)}
+.ck-mark{font-size:1.05rem;color:var(--green);display:none;font-weight:800}
+.ck-cell.checked .ck-mark{display:block}
+
+/* BATTERY */
+.bat-cell{
+  border-right:1px solid var(--border);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  min-height:36px;background:#fff;padding:2px;
+}
+.bat-cell:last-child{border-right:none}
+.bat-select{
+  border:1px solid var(--border);border-radius:4px;
+  font-family:var(--font);font-size:.68rem;font-weight:600;
+  padding:2px 2px;width:92%;outline:none;cursor:pointer;
+  background:#f5f8ff;color:var(--text);
+}
+.bat-select:focus{border-color:var(--navy2)}
+
+/* INSPECTOR */
+.inspector-grid{display:grid;grid-template-columns:150px repeat(10,1fr)}
+.ins-label{
+  background:var(--gray-header);color:#fff;font-size:.73rem;font-weight:700;
+  padding:7px 10px;text-align:right;display:flex;align-items:center;justify-content:flex-end;
+  border-right:1px solid rgba(255,255,255,.2);
+}
+.ins-cell{border-right:1px solid var(--border)}
+.ins-cell:last-child{border-right:none}
+.ins-cell input{
+  width:100%;min-height:36px;border:none;outline:none;
+  font-family:var(--font);font-size:.72rem;text-align:center;
+  background:#f0f5ff;color:var(--text);padding:4px 2px;display:block;
+}
+.ins-cell input:focus{background:#d6e4ff}
+
+/* ACTION ROW */
+.action-row{
+  display:flex;gap:10px;padding:14px 16px;
+  background:#f0f4fb;border-top:1px solid var(--border);flex-wrap:wrap;align-items:center;
+}
+.btn{
+  padding:8px 18px;border-radius:5px;border:none;cursor:pointer;
+  font-family:var(--font);font-size:.83rem;font-weight:700;
+  transition:all .18s;display:flex;align-items:center;gap:5px;
+}
+.btn-save{background:var(--navy);color:#fff}
+.btn-save:hover{background:var(--navy2)}
+.btn-clear{background:#fff;color:var(--navy);border:1.5px solid var(--border)}
+.btn-clear:hover{background:var(--accent)}
+.save-status{
+  font-size:.8rem;color:var(--green);font-weight:700;
+  display:flex;align-items:center;gap:4px;
+  opacity:0;transition:opacity .3s;margin-left:auto;
+}
+.save-status.show{opacity:1}
+
+/* HISTORY */
+#page-history{display:none}
+.history-filters{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap;align-items:center}
+.history-filters select,.history-filters input{
+  border:1.5px solid var(--border);border-radius:5px;
+  padding:6px 10px;font-family:var(--font);font-size:.82rem;
+  background:#f5f8ff;outline:none;color:var(--text);
+}
+.record-card{background:#fff;border-radius:var(--radius);border:1px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,.06);margin-bottom:10px;overflow:hidden}
+.record-card-header{background:var(--accent);padding:10px 14px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.record-card-header .info{font-size:.82rem;font-weight:600;color:var(--navy)}
+.badge-day{background:#FFF3CD;color:#856404;padding:2px 10px;border-radius:10px;font-size:.72rem;font-weight:700}
+.badge-night{background:#2d3a6b;color:#fff;padding:2px 10px;border-radius:10px;font-size:.72rem;font-weight:700}
+.record-card-body{padding:0}
+.rc-room-tag{background:#f0f5ff;border-radius:4px;padding:3px 8px;font-weight:700;color:var(--navy);font-size:.75rem}
+.rc-edit-btn,.rc-del-btn{border:1px solid;padding:4px 10px;border-radius:4px;cursor:pointer;font-family:var(--font);font-size:.73rem;font-weight:700;transition:background .15s}
+.rc-edit-btn{border-color:var(--border);background:#f5f8ff;color:var(--navy)}
+.rc-del-btn{border-color:#e8c0c0;background:#fff0f0;color:var(--red)}
+
+/* HISTORY NEW STYLES */
+.day-group{margin-bottom:18px}
+.day-group-header{
+  background:var(--navy);color:#fff;padding:9px 16px;
+  border-radius:6px 6px 0 0;font-size:.85rem;font-weight:700;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.day-group-body{border:1px solid var(--border);border-top:none;border-radius:0 0 6px 6px;overflow:hidden;background:#fff}
+.shift-block{border-bottom:1px solid var(--border)}
+.shift-block:last-child{border-bottom:none}
+.shift-block-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:8px 14px;background:#f8faff;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:6px;
+}
+.shift-block-title{font-size:.82rem;font-weight:700;display:flex;align-items:center;gap:6px}
+.shift-block-actions{display:flex;gap:6px}
+.room-table{width:100%;border-collapse:collapse}
+.room-table th{background:#eef2fb;color:var(--navy);padding:6px 12px;font-size:.73rem;font-weight:700;text-align:left;border-bottom:1px solid var(--border)}
+.room-table td{padding:7px 12px;font-size:.77rem;border-bottom:1px solid #eef2fb;vertical-align:middle}
+.room-table tr:last-child td{border-bottom:none}
+.room-table tr:hover td{background:#f5f8ff}
+.bat-pill{display:inline-block;padding:1px 8px;border-radius:8px;font-size:.7rem;font-weight:700}
+.bat-high{background:#d4edda;color:#155724}
+.bat-med{background:#fff3cd;color:#856404}
+.bat-low{background:#f8d7da;color:#721c24}
+.check-dots{display:flex;gap:3px;flex-wrap:wrap}
+.cdot{width:14px;height:14px;border-radius:50%;font-size:.6rem;display:flex;align-items:center;justify-content:center;font-weight:700}
+.cdot.ok{background:var(--green-bg);color:var(--green)}
+.cdot.no{background:#f0f0f0;color:#bbb}
+.no-room-row{padding:10px 14px;font-size:.78rem;color:#aaa;font-style:italic}
+
+/* SUMMARY NEW STYLES */
+#page-summary{display:none}
+.summary-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px}
+.summary-header h2{font-size:1rem;font-weight:700;color:var(--navy)}
+.sum-tabs{display:flex;gap:0;margin-bottom:16px;border:1.5px solid var(--border);border-radius:6px;overflow:hidden;width:fit-content}
+.sum-tab{padding:8px 20px;font-family:var(--font);font-size:.82rem;font-weight:700;cursor:pointer;background:#f5f8ff;color:var(--navy);border:none;border-right:1px solid var(--border);transition:background .15s}
+.sum-tab:last-child{border-right:none}
+.sum-tab.active{background:var(--navy);color:#fff}
+.summary-table{width:100%;border-collapse:collapse;background:#fff;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);margin-bottom:20px}
+.summary-table th{background:var(--navy);color:#fff;padding:9px 12px;font-size:.77rem;font-weight:700;text-align:left}
+.summary-table td{padding:8px 12px;font-size:.78rem;border-bottom:1px solid var(--border)}
+.summary-table tr:last-child td{border-bottom:none}
+.summary-table tr:hover td{background:#f0f5ff}
+.del-month-btn{background:#fff0f0;border:1px solid #e8c0c0;color:var(--red);padding:5px 12px;border-radius:4px;cursor:pointer;font-family:var(--font);font-size:.77rem;font-weight:700}
+.del-month-btn:hover{background:#ffe0e0}
+.month-title{font-size:.93rem;font-weight:700;color:var(--navy);padding:8px 0 6px;border-bottom:2px solid var(--border);margin-bottom:12px;display:flex;align-items:center;justify-content:space-between}
+.no-records{text-align:center;padding:36px;color:#999;font-size:.88rem}
+.sum-shift-section{margin-bottom:24px}
+.sum-shift-header{
+  background:var(--accent);border:1px solid var(--border);border-radius:6px 6px 0 0;
+  padding:8px 14px;font-size:.83rem;font-weight:700;color:var(--navy);
+}
+.sum-shift-header.night-hdr{background:#e8ecf8;color:#2d3a6b}
+.daily-date-row{
+  background:#f0f4fb;padding:7px 14px;font-size:.8rem;font-weight:700;color:var(--navy);
+  border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;
+}
+.daily-date-row:first-child{border-top:1px solid var(--border)}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:999;display:none;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.open{display:flex}
+.modal-box{background:#fff;border-radius:var(--radius);max-width:420px;width:100%;box-shadow:0 8px 40px rgba(0,0,0,.25);overflow:hidden}
+.modal-header{background:var(--navy);color:#fff;padding:13px 18px;font-size:.92rem;font-weight:700}
+.modal-body{padding:18px 20px;font-size:.85rem;color:var(--text)}
+.modal-footer{display:flex;gap:8px;justify-content:flex-end;padding:0 18px 16px}
+
+/* SECTION HEADER in summary */
+.sh3{font-size:.88rem;color:var(--navy);margin-bottom:10px;font-weight:700;margin-top:4px}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="logo-wrap">
+    <svg width="44" height="44" viewBox="0 0 90 90" xmlns="http://www.w3.org/2000/svg">
+      <rect width="90" height="90" fill="white" rx="4"/>
+      <path d="M12 10 h30 a20 20 0 0 1 0 40 H12 Z" fill="#C0272D"/>
+      <rect x="24" y="18" width="8" height="24" fill="white"/>
+      <rect x="16" y="26" width="24" height="8" fill="white"/>
+      <path d="M12 50 h33 a22 22 0 0 1 0 30 H12 Z" fill="#1B3A6B"/>
+    </svg>
+    <div class="logo-text">
+      <div class="bh">BANGKOK<br/>HOSPITAL</div>
+      <div class="pt">PATTAYA</div>
+    </div>
+  </div>
+  <div class="topbar-title">
+    <h1>แบบบันทึกการตรวจสอบ Bed Exit Alarm แบบกระดุม</h1>
+    <p>ระบบบันทึกอิเล็กทรอนิกส์ – Bangkok Hospital Pattaya</p>
+  </div>
+  <div class="nav-tabs">
+    <button class="nav-btn active" onclick="showPage('form')">📋 บันทึก</button>
+    <button class="nav-btn" onclick="showPage('history')">🗂 ประวัติ</button>
+    <button class="nav-btn" onclick="showPage('summary')">📊 สรุปผล</button>
+  </div>
+</div>
+
+<!-- DATE BAR -->
+<div class="date-bar">
+  <label>📅 วันที่ :</label>
+  <div class="date-nav"><button onclick="changeDate(-1)">◀</button></div>
+  <input type="date" id="globalDate" onchange="onDateChange()"/>
+  <div class="date-nav"><button onclick="changeDate(1)">▶</button></div>
+  <span class="date-display" id="dateDisplay"></span>
+</div>
+
+<!-- FORM PAGE -->
+<div id="page-form" class="main">
+  <div class="shift-label">
+    <span class="shift-badge">☀️ กะเช้า 07:00 – 19:00</span>
+    <div class="shift-line"></div>
+  </div>
+  <div class="form-card" id="card-day"></div>
+  <div class="action-row">
+    <button class="btn btn-save" onclick="saveShift('day')">💾 บันทึกกะเช้า</button>
+    <button class="btn btn-clear" onclick="clearShift('day')">🗑 ล้าง</button>
+    <span class="save-status" id="status-day">✅ บันทึกสำเร็จ</span>
+  </div>
+
+  <div class="shift-label">
+    <span class="shift-badge night">🌙 กะดึก 19:00 – 07:00</span>
+    <div class="shift-line"></div>
+  </div>
+  <div class="form-card" id="card-night"></div>
+  <div class="action-row">
+    <button class="btn btn-save" onclick="saveShift('night')">💾 บันทึกกะดึก</button>
+    <button class="btn btn-clear" onclick="clearShift('night')">🗑 ล้าง</button>
+    <span class="save-status" id="status-night">✅ บันทึกสำเร็จ</span>
+  </div>
+</div>
+
+<!-- HISTORY PAGE -->
+<div id="page-history" class="main">
+  <div class="history-filters">
+    <label style="font-weight:700;font-size:.85rem;color:var(--navy)">🗂 ประวัติ</label>
+    <input type="month" id="historyMonth" onchange="loadHistory()"/>
+    <select id="historyShift" onchange="loadHistory()">
+      <option value="all">ทุกกะ</option>
+      <option value="day">กะเช้า</option>
+      <option value="night">กะดึก</option>
+    </select>
+  </div>
+  <div id="historyList"><div class="no-records">เลือกเดือนเพื่อดูประวัติ</div></div>
+</div>
+
+<!-- SUMMARY PAGE -->
+<div id="page-summary" class="main">
+  <div class="summary-header">
+    <h2>📊 สรุปผลการตรวจสอบ</h2>
+    <div style="display:flex;gap:8px;align-items:center">
+      <label style="font-weight:700;font-size:.82rem;color:var(--navy)">เดือน:</label>
+      <input type="month" id="summaryMonth" onchange="loadSummary()"
+        style="border:1.5px solid var(--border);border-radius:5px;padding:6px 10px;font-family:var(--font);font-size:.82rem;background:#f5f8ff;outline:none;color:var(--text)"/>
+    </div>
+  </div>
+  <div class="sum-tabs">
+    <button class="sum-tab active" id="tab-monthly" onclick="switchSumTab('monthly')">📅 รายเดือน</button>
+    <button class="sum-tab" id="tab-daily" onclick="switchSumTab('daily')">📆 รายวัน</button>
+  </div>
+  <div id="summaryContent"><div class="no-records">เลือกเดือนเพื่อดูสรุป</div></div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="confirmModal">
+  <div class="modal-box">
+    <div class="modal-header">⚠️ ยืนยันการลบ</div>
+    <div class="modal-body"><p id="confirmMsg"></p></div>
+    <div class="modal-footer">
+      <button class="btn btn-clear" onclick="closeModal()">ยกเลิก</button>
+      <button class="btn btn-save" style="background:var(--red)" id="confirmOkBtn">ลบข้อมูล</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ====================================================
+//  STORAGE LAYER — swap to Firebase by replacing these 4 functions
+// ====================================================
+const STORAGE_KEY = 'bedExitAlarm_v1';
+
+function storageGetAll(){
+  try{ return JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}'); }
+  catch(e){ return {}; }
+}
+function storageSet(id, payload){
+  const all = storageGetAll();
+  all[id] = payload;
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(all));
+}
+function storageDelete(id){
+  const all = storageGetAll();
+  delete all[id];
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(all));
+}
+function storageGetByMonth(month){ // month = "YYYY-MM"
+  const all = storageGetAll();
+  return Object.entries(all)
+    .filter(([,v])=> v.date && v.date.startsWith(month))
+    .map(([id,v])=>({id,...v}));
+}
+
+// ====================================================
+//  CONSTANTS
+// ====================================================
+const COLS = 10;
+const CHECKS = [
+  {key:'gateway', label:'เช็คการเชื่อมต่อระหว่าง Gateway และ Sensor (กระดุม) หากไม่เชื่อมต่อ ให้เช็คว่าเครื่องไอแพดเปิดบลูทูธอยู่หรือไม่'},
+  {key:'wifi',    label:'เช็คการเชื่อมต่อ wifi'},
+  {key:'attach',  label:'เช็คการติดกระดุมถูกต้องหรือไม่'},
+  {key:'sensor',  label:'เช็คการเปิด–ปิด ของ Sensor (กระดุม)'},
+  {key:'dist',    label:'เช็คระยะห่าง ระหว่าง Gateway และ Sensor (กระดุม) ไม่ควรห่างเกิน 8–10 เมตร เพราะเป็นระยะของบลูทูธ'},
+];
+const THAI_DAYS=['อาทิตย์','จันทร์','อังคาร','พุธ','พฤหัสบดี','ศุกร์','เสาร์'];
+const THAI_MONTHS=['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+
+// ====================================================
+//  FORM STATE
+// ====================================================
+let formData = {day: emptyForm(), night: emptyForm()};
+
+function emptyForm(){
+  const r={};
+  for(let i=0;i<COLS;i++){
+    r[i]={device:'',room:'',date:'',time:'',battery:'',
+          gateway:false,wifi:false,attach:false,sensor:false,dist:false,
+          inspector:''};
+  }
+  return r;
+}
+
+// ====================================================
+//  INIT
+// ====================================================
+window.addEventListener('load',()=>{
+  const d=new Date();
+  const v=`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+  document.getElementById('globalDate').value=v;
+  const ym=`${d.getFullYear()}-${pad(d.getMonth()+1)}`;
+  document.getElementById('historyMonth').value=ym;
+  document.getElementById('summaryMonth').value=ym;
+  updateDateDisplay();
+  loadExistingForDate();
+});
+
+function pad(n){return String(n).padStart(2,'0')}
+function todayStr(){return document.getElementById('globalDate').value}
+function docId(shift){return todayStr()+'_'+shift}
+
+// ====================================================
+//  DATE
+// ====================================================
+function onDateChange(){
+  updateDateDisplay();
+  formData={day:emptyForm(),night:emptyForm()};
+  loadExistingForDate();
+}
+function changeDate(delta){
+  const inp=document.getElementById('globalDate');
+  const d=new Date(inp.value+'T12:00:00');
+  d.setDate(d.getDate()+delta);
+  inp.value=`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+  onDateChange();
+}
+function updateDateDisplay(){
+  const v=document.getElementById('globalDate').value;
+  if(!v)return;
+  const d=new Date(v+'T12:00:00');
+  document.getElementById('dateDisplay').textContent=
+    `วัน${THAI_DAYS[d.getDay()]}ที่ ${d.getDate()} ${THAI_MONTHS[d.getMonth()]} ${d.getFullYear()+543}`;
+}
+
+// ====================================================
+//  LOAD EXISTING DATA
+// ====================================================
+function loadExistingForDate(){
+  ['day','night'].forEach(shift=>{
+    const saved=storageGetAll()[docId(shift)];
+    if(saved && saved.columns){
+      formData[shift]=saved.columns;
+    } else {
+      formData[shift]=emptyForm();
+    }
+    renderCard(shift);
+  });
+}
+
+// ====================================================
+//  RENDER
+// ====================================================
+function renderCard(shift){
+  const card=document.getElementById('card-'+shift);
+  const data=formData[shift];
+  const date=todayStr();
+  let h='';
+
+  // INFO GRID
+  h+=`<div class="info-grid">`;
+  const infoRows=[
+    {label:'เบอร์เครื่อง', field:'device', type:'text', ph:'เบอร์'},
+    {label:'Room',          field:'room',   type:'text', ph:'ห้อง'},
+    {label:'Date',          field:'date',   type:'date', ph:''},
+    {label:'Time',          field:'time',   type:'time', ph:''},
+  ];
+  infoRows.forEach(row=>{
+    h+=`<div class="ig-label">${row.label}</div>`;
+    for(let i=0;i<COLS;i++){
+      let val = data[i][row.field];
+      if(row.field==='date' && !val) val=date;
+      h+=`<div class="ig-cell">
+        <input type="${row.type}" placeholder="${row.ph}" value="${esc(val)}"
+          data-shift="${shift}" data-col="${i}" data-field="${row.field}"
+          oninput="setValEl(this)" onchange="setValEl(this)"/>
+      </div>`;
+    }
+  });
+  h+=`</div>`;
+
+  // CHECK GRID
+  h+=`<div class="check-grid">
+    <div class="check-grid-hdr">ตรวจสอบการใช้งานของ Bed Exit Alarm แบบกระดุม</div>`;
+
+  // Battery
+  h+=`<div class="ck-label" style="background:#f0f5ff;font-weight:700;color:var(--navy);">เช็คแบตเตอรี่ สถานะ</div>`;
+  for(let i=0;i<COLS;i++){
+    h+=`<div class="bat-cell">
+      <select class="bat-select"
+        data-shift="${shift}" data-col="${i}" data-field="battery"
+        onchange="setValEl(this)">
+        <option value="">–</option>
+        <option value="High" ${data[i].battery==='High'?'selected':''}>🟢 High</option>
+        <option value="Medium" ${data[i].battery==='Medium'?'selected':''}>🟡 Med</option>
+        <option value="Low" ${data[i].battery==='Low'?'selected':''}>🔴 Low</option>
+      </select></div>`;
+  }
+
+  // Check rows
+  CHECKS.forEach(ck=>{
+    h+=`<div class="ck-label">${ck.label}</div>`;
+    for(let i=0;i<COLS;i++){
+      const chk=data[i][ck.key]?'checked':'';
+      h+=`<div class="ck-cell ${chk}"
+        data-shift="${shift}" data-col="${i}" data-field="${ck.key}"
+        onclick="toggleCk(this)"><span class="ck-mark">✔</span></div>`;
+    }
+  });
+  h+=`</div>`;
+
+  // Inspector
+  h+=`<div class="inspector-grid">
+    <div class="ins-label">ผู้ตรวจสอบ</div>`;
+  for(let i=0;i<COLS;i++){
+    h+=`<div class="ins-cell">
+      <input type="text" placeholder="ชื่อ-สกุล" value="${esc(data[i].inspector)}"
+        data-shift="${shift}" data-col="${i}" data-field="inspector"
+        oninput="setValEl(this)"/>
+    </div>`;
+  }
+  h+=`</div>`;
+
+  card.innerHTML=h;
+}
+
+function esc(v){return (v||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;')}
+
+function setValEl(el){
+  const {shift,col,field}=el.dataset;
+  formData[shift][col][field]=el.value;
+}
+function toggleCk(el){
+  const {shift,col,field}=el.dataset;
+  const cur=formData[shift][col][field];
+  formData[shift][col][field]=!cur;
+  el.classList.toggle('checked',!cur);
+}
+
+// ====================================================
+//  SAVE / CLEAR
+// ====================================================
+function saveShift(shift){
+  const payload={
+    date:todayStr(), shift,
+    columns:formData[shift],
+    updatedAt:new Date().toISOString()
+  };
+  storageSet(docId(shift), payload);
+  const s=document.getElementById('status-'+shift);
+  s.classList.add('show');
+  setTimeout(()=>s.classList.remove('show'),2500);
+}
+
+function clearShift(shift){
+  formData[shift]=emptyForm();
+  renderCard(shift);
+}
+
+// ====================================================
+//  PAGE SWITCH
+// ====================================================
+function showPage(p){
+  ['form','history','summary'].forEach(x=>{
+    document.getElementById('page-'+x).style.display=x===p?'block':'none';
+  });
+  document.querySelectorAll('.nav-btn').forEach((b,i)=>{
+    b.classList.toggle('active',['form','history','summary'][i]===p);
+  });
+  if(p==='history') loadHistory();
+  if(p==='summary') loadSummary();
+}
+
+// ====================================================
+//  HISTORY — grouped by day, show room table per shift
+// ====================================================
+const CHECK_LABELS = {gateway:'Gateway',wifi:'WiFi',attach:'ติดกระดุม',sensor:'Sensor',dist:'ระยะห่าง'};
+
+function loadHistory(){
+  const month=document.getElementById('historyMonth').value;
+  const shiftF=document.getElementById('historyShift').value;
+  const list=document.getElementById('historyList');
+  let docs=storageGetByMonth(month);
+  if(shiftF!=='all') docs=docs.filter(d=>d.shift===shiftF);
+  if(!docs.length){list.innerHTML='<div class="no-records">ไม่พบข้อมูล</div>';return;}
+
+  // group by date
+  const byDate={};
+  docs.forEach(d=>{
+    if(!byDate[d.date]) byDate[d.date]=[];
+    byDate[d.date].push(d);
+  });
+  const dates=Object.keys(byDate).sort((a,b)=>b.localeCompare(a));
+
+  let h='';
+  dates.forEach(date=>{
+    const dayDocs=byDate[date];
+    // sort: day first, night second
+    dayDocs.sort((a,b)=>a.shift==='day'?-1:1);
+    h+=`<div class="day-group">
+      <div class="day-group-header">
+        <span>📅 ${fmtThai(date)}</span>
+        <span style="font-size:.75rem;opacity:.8">${dayDocs.length} กะ</span>
+      </div>
+      <div class="day-group-body">`;
+
+    dayDocs.forEach(d=>{
+      const isDay=d.shift==='day';
+      const shiftLabel=isDay?'☀️ กะเช้า 07:00–19:00':'🌙 กะดึก 19:00–07:00';
+      const shiftBadgeClass=isDay?'badge-day':'badge-night';
+      const cols=d.columns||{};
+      const roomRows=Object.values(cols).filter(c=>c.room);
+
+      h+=`<div class="shift-block">
+        <div class="shift-block-header">
+          <div class="shift-block-title">
+            <span class="${shiftBadgeClass}">${shiftLabel}</span>
+            <span style="font-size:.75rem;color:#666">${roomRows.length} ห้อง</span>
+          </div>
+          <div class="shift-block-actions">
+            <button class="rc-edit-btn" onclick="editRecord('${d.id}','${d.date}','${d.shift}')">✏️ แก้ไข</button>
+            <button class="rc-del-btn" onclick="confirmDelete('${d.id}')">🗑 ลบ</button>
+          </div>
+        </div>`;
+
+      if(roomRows.length){
+        h+=`<table class="room-table">
+          <thead><tr>
+            <th style="width:32px">#</th>
+            <th>ห้อง</th>
+            <th>เบอร์เครื่อง</th>
+            <th>เวลา</th>
+            <th>แบตเตอรี่</th>
+            <th>การตรวจสอบ</th>
+            <th>ผู้ตรวจสอบ</th>
+          </tr></thead><tbody>`;
+        roomRows.forEach((c,idx)=>{
+          const batClass=c.battery==='High'?'bat-high':c.battery==='Medium'?'bat-med':c.battery==='Low'?'bat-low':'';
+          const batLabel=c.battery?`<span class="bat-pill ${batClass}">${c.battery}</span>`:'<span style="color:#bbb">–</span>';
+          const checks=Object.keys(CHECK_LABELS).map(k=>
+            `<span class="cdot ${c[k]?'ok':'no'}" title="${CHECK_LABELS[k]}">${c[k]?'✔':'·'}</span>`
+          ).join('');
+          h+=`<tr>
+            <td style="color:#aaa;font-size:.72rem">${idx+1}</td>
+            <td><b style="color:var(--navy)">${c.room}</b></td>
+            <td>${c.device||'–'}</td>
+            <td>${c.time||'–'}</td>
+            <td>${batLabel}</td>
+            <td><div class="check-dots">${checks}</div></td>
+            <td>${c.inspector||'–'}</td>
+          </tr>`;
+        });
+        h+=`</tbody></table>`;
+      } else {
+        h+=`<div class="no-room-row">ไม่มีข้อมูลห้อง</div>`;
+      }
+      h+=`</div>`; // shift-block
+    });
+    h+=`</div></div>`; // day-group-body + day-group
+  });
+  list.innerHTML=h;
+}
+
+function editRecord(id,date,shift){
+  document.getElementById('globalDate').value=date;
+  onDateChange();
+  setTimeout(()=>{
+    showPage('form');
+    document.getElementById('card-'+shift).scrollIntoView({behavior:'smooth'});
+  },200);
+}
+
+function confirmDelete(id){
+  showConfirm('ต้องการลบบันทึกนี้ใช่หรือไม่?',()=>{
+    storageDelete(id);
+    loadHistory();
+  });
+}
+
+// ====================================================
+//  SUMMARY — monthly + daily views, split by shift
+// ====================================================
+let currentSumTab = 'monthly';
+
+function switchSumTab(tab){
+  currentSumTab=tab;
+  document.getElementById('tab-monthly').classList.toggle('active',tab==='monthly');
+  document.getElementById('tab-daily').classList.toggle('active',tab==='daily');
+  loadSummary();
+}
+
+function loadSummary(){
+  const month=document.getElementById('summaryMonth').value;
+  const cont=document.getElementById('summaryContent');
+  const docs=storageGetByMonth(month);
+  if(!docs.length){cont.innerHTML='<div class="no-records">ไม่พบข้อมูลในเดือนนี้</div>';return;}
+  if(currentSumTab==='monthly') renderSummaryMonthly(docs, month, cont);
+  else renderSummaryDaily(docs, month, cont);
+}
+
+function buildShiftRoomTable(docs, shift){
+  // if shift provided, filter; if docs are already filtered pass shift=null
+  const filtered = shift ? docs.filter(d=>d.shift===shift) : docs;
+  const roomStats={};
+  filtered.forEach(d=>{
+    Object.values(d.columns||{}).forEach(c=>{
+      if(!c.room)return;
+      if(!roomStats[c.room]) roomStats[c.room]={count:0,ins:new Set(),dates:new Set()};
+      roomStats[c.room].count++;
+      if(c.inspector) roomStats[c.room].ins.add(c.inspector);
+      roomStats[c.room].dates.add(d.date);
+    });
+  });
+  if(!Object.keys(roomStats).length) return '<div style="padding:10px 14px;color:#aaa;font-size:.8rem">ไม่มีข้อมูล</div>';
+  let t=`<table class="summary-table">
+    <thead><tr>
+      <th>ห้อง</th>
+      <th>จำนวนครั้งที่ใช้กระดุม</th>
+      <th>จำนวนวันที่บันทึก</th>
+      <th>ผู้ตรวจสอบ</th>
+    </tr></thead><tbody>`;
+  Object.entries(roomStats).sort((a,b)=>b[1].count-a[1].count).forEach(([room,s])=>{
+    t+=`<tr>
+      <td><b>${room}</b></td>
+      <td>${s.count} ครั้ง</td>
+      <td>${s.dates.size} วัน</td>
+      <td>${[...s.ins].join(', ')||'–'}</td>
+    </tr>`;
+  });
+  return t+'</tbody></table>';
+}
+
+function renderSummaryMonthly(docs, month, cont){
+  const [y,m]=month.split('-');
+  const thaiMo=THAI_MONTHS[parseInt(m)-1];
+  const thaiY=parseInt(y)+543;
+  let h=`
+  <div class="month-title">
+    สรุปผลประจำเดือน ${thaiMo} ${thaiY}
+    <button class="del-month-btn" onclick="deleteMonth('${month}')">🗑 ลบข้อมูลทั้งเดือน</button>
+  </div>
+
+  <div class="sum-shift-section">
+    <div class="sum-shift-header">☀️ กะเช้า 07:00 – 19:00 — สรุปตามห้อง</div>
+    ${buildShiftRoomTable(docs,'day')}
+  </div>
+
+  <div class="sum-shift-section">
+    <div class="sum-shift-header night-hdr">🌙 กะดึก 19:00 – 07:00 — สรุปตามห้อง</div>
+    ${buildShiftRoomTable(docs,'night')}
+  </div>`;
+  cont.innerHTML=h;
+}
+
+function renderSummaryDaily(docs, month, cont){
+  const [y,m]=month.split('-');
+  const thaiMo=THAI_MONTHS[parseInt(m)-1];
+  const thaiY=parseInt(y)+543;
+
+  const byDate={};
+  docs.forEach(d=>{if(!byDate[d.date])byDate[d.date]={day:[],night:[]};byDate[d.date][d.shift].push(d);});
+  const dates=Object.keys(byDate).sort((a,b)=>b.localeCompare(a));
+
+  let h=`<div class="month-title">
+    สรุปรายวัน — ${thaiMo} ${thaiY}
+    <button class="del-month-btn" onclick="deleteMonth('${month}')">🗑 ลบข้อมูลทั้งเดือน</button>
+  </div>`;
+
+  dates.forEach(date=>{
+    const dayDocs=byDate[date];
+    h+=`<div style="margin-bottom:22px">
+      <div class="daily-date-row">📅 ${fmtThai(date)}</div>`;
+    // morning
+    h+=`<div class="sum-shift-header" style="border-radius:0;border:1px solid var(--border);border-top:none">☀️ กะเช้า</div>`;
+    h+=dayDocs.day.length?buildShiftRoomTable(dayDocs.day,null):'<div style="padding:8px 14px;color:#aaa;font-size:.78rem;background:#fff;border:1px solid var(--border);border-top:none">ไม่มีข้อมูลกะเช้า</div>';
+    // night
+    h+=`<div class="sum-shift-header night-hdr" style="border-radius:0;border:1px solid var(--border);border-top:none">🌙 กะดึก</div>`;
+    h+=dayDocs.night.length?buildShiftRoomTable(dayDocs.night,null):'<div style="padding:8px 14px;color:#aaa;font-size:.78rem;background:#fff;border:1px solid var(--border);border-top:none">ไม่มีข้อมูลกะดึก</div>';
+    h+=`</div>`;
+  });
+  cont.innerHTML=h;
+}
+
+function deleteMonth(month){
+  showConfirm(`ลบข้อมูลทั้งหมดของเดือน ${month} ใช่หรือไม่? ไม่สามารถกู้คืนได้`,()=>{
+    const docs=storageGetByMonth(month);
+    docs.forEach(d=>storageDelete(d.id));
+    loadSummary();
+  });
+}
+
+// ====================================================
+//  MODAL
+// ====================================================
+function showConfirm(msg,fn){
+  document.getElementById('confirmMsg').textContent=msg;
+  document.getElementById('confirmOkBtn').onclick=()=>{closeModal();fn();};
+  document.getElementById('confirmModal').classList.add('open');
+}
+function closeModal(){document.getElementById('confirmModal').classList.remove('open');}
+document.getElementById('confirmModal').addEventListener('click',function(e){if(e.target===this)closeModal();});
+
+// ====================================================
+//  HELPERS
+// ====================================================
+function fmtThai(ds){
+  if(!ds)return'';
+  const d=new Date(ds+'T12:00:00');
+  return `${d.getDate()} ${THAI_MONTHS[d.getMonth()]} ${d.getFullYear()+543}`;
+}
+</script>
+</body>
+</html>
