@@ -363,31 +363,54 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
   </div>
 </div>
 
-<script>
+<script type="module">
 // ====================================================
-//  STORAGE LAYER — swap to Firebase by replacing these 4 functions
+//  FIREBASE CONFIG
 // ====================================================
-const STORAGE_KEY = 'bedExitAlarm_v1';
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getDatabase, ref, set, get, remove, query, orderByChild, startAt, endAt, onValue, off }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
-function storageGetAll(){
-  try{ return JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}'); }
-  catch(e){ return {}; }
+const firebaseConfig = {
+  apiKey: "AIzaSyC2Z2vTVhzepWHtE4F9g1df97itPMGfOyA",
+  authDomain: "bed-exit-alarm.firebaseapp.com",
+  databaseURL: "https://bed-exit-alarm-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "bed-exit-alarm",
+  storageBucket: "bed-exit-alarm.firebasestorage.app",
+  messagingSenderId: "405252502824",
+  appId: "1:405252502824:web:237ac2475c74841116cc1d",
+  measurementId: "G-BV30LWJMPK"
+};
+
+const app = initializeApp(firebaseConfig);
+const db  = getDatabase(app);
+
+// ====================================================
+//  STORAGE LAYER — Firebase Realtime Database
+// ====================================================
+async function storageSet(id, payload){
+  // Convert columns object: keys must be strings, booleans stay boolean
+  const clean = JSON.parse(JSON.stringify(payload));
+  await set(ref(db, 'bedExitAlarm/' + id), clean);
 }
-function storageSet(id, payload){
-  const all = storageGetAll();
-  all[id] = payload;
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(all));
+
+async function storageDelete(id){
+  await remove(ref(db, 'bedExitAlarm/' + id));
 }
-function storageDelete(id){
-  const all = storageGetAll();
-  delete all[id];
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(all));
-}
-function storageGetByMonth(month){ // month = "YYYY-MM"
-  const all = storageGetAll();
+
+async function storageGetByMonth(month){ // month = "YYYY-MM"
+  const snap = await get(ref(db, 'bedExitAlarm'));
+  if(!snap.exists()) return [];
+  const all = snap.val();
   return Object.entries(all)
     .filter(([,v])=> v.date && v.date.startsWith(month))
     .map(([id,v])=>({id,...v}));
+}
+
+async function storageGetOne(id){
+  const snap = await get(ref(db, 'bedExitAlarm/' + id));
+  if(!snap.exists()) return null;
+  return snap.val();
 }
 
 // ====================================================
@@ -463,16 +486,18 @@ function updateDateDisplay(){
 // ====================================================
 //  LOAD EXISTING DATA
 // ====================================================
-function loadExistingForDate(){
-  ['day','night'].forEach(shift=>{
-    const saved=storageGetAll()[docId(shift)];
+async function loadExistingForDate(){
+  showLoading(true);
+  for(const shift of ['day','night']){
+    const saved = await storageGetOne(docId(shift));
     if(saved && saved.columns){
-      formData[shift]=saved.columns;
+      formData[shift] = saved.columns;
     } else {
-      formData[shift]=emptyForm();
+      formData[shift] = emptyForm();
     }
     renderCard(shift);
-  });
+  }
+  showLoading(false);
 }
 
 // ====================================================
@@ -567,16 +592,23 @@ function toggleCk(el){
 // ====================================================
 //  SAVE / CLEAR
 // ====================================================
-function saveShift(shift){
+async function saveShift(shift){
+  const btn = document.querySelector(`button[onclick="saveShift('${shift}')"]`);
+  if(btn){ btn.disabled=true; btn.textContent='⏳ กำลังบันทึก...'; }
   const payload={
     date:todayStr(), shift,
     columns:formData[shift],
     updatedAt:new Date().toISOString()
   };
-  storageSet(docId(shift), payload);
-  const s=document.getElementById('status-'+shift);
-  s.classList.add('show');
-  setTimeout(()=>s.classList.remove('show'),2500);
+  try{
+    await storageSet(docId(shift), payload);
+    const s=document.getElementById('status-'+shift);
+    s.classList.add('show');
+    setTimeout(()=>s.classList.remove('show'),2500);
+  } catch(e){
+    alert('เกิดข้อผิดพลาด: '+e.message);
+  }
+  if(btn){ btn.disabled=false; btn.textContent= shift==='day'?'💾 บันทึกกะเช้า':'💾 บันทึกกะดึก'; }
 }
 
 function clearShift(shift){
@@ -603,11 +635,12 @@ function showPage(p){
 // ====================================================
 const CHECK_LABELS = {gateway:'Gateway',wifi:'WiFi',attach:'ติดกระดุม',sensor:'Sensor',dist:'ระยะห่าง'};
 
-function loadHistory(){
+async function loadHistory(){
   const month=document.getElementById('historyMonth').value;
   const shiftF=document.getElementById('historyShift').value;
   const list=document.getElementById('historyList');
-  let docs=storageGetByMonth(month);
+  list.innerHTML='<div class="no-records">⏳ กำลังโหลด...</div>';
+  let docs=await storageGetByMonth(month);
   if(shiftF!=='all') docs=docs.filter(d=>d.shift===shiftF);
   if(!docs.length){list.innerHTML='<div class="no-records">ไม่พบข้อมูล</div>';return;}
 
@@ -622,7 +655,6 @@ function loadHistory(){
   let h='';
   dates.forEach(date=>{
     const dayDocs=byDate[date];
-    // sort: day first, night second
     dayDocs.sort((a,b)=>a.shift==='day'?-1:1);
     h+=`<div class="day-group">
       <div class="day-group-header">
@@ -681,9 +713,9 @@ function loadHistory(){
       } else {
         h+=`<div class="no-room-row">ไม่มีข้อมูลห้อง</div>`;
       }
-      h+=`</div>`; // shift-block
+      h+=`</div>`;
     });
-    h+=`</div></div>`; // day-group-body + day-group
+    h+=`</div></div>`;
   });
   list.innerHTML=h;
 }
@@ -698,8 +730,8 @@ function editRecord(id,date,shift){
 }
 
 function confirmDelete(id){
-  showConfirm('ต้องการลบบันทึกนี้ใช่หรือไม่?',()=>{
-    storageDelete(id);
+  showConfirm('ต้องการลบบันทึกนี้ใช่หรือไม่?', async()=>{
+    await storageDelete(id);
     loadHistory();
   });
 }
@@ -716,17 +748,17 @@ function switchSumTab(tab){
   loadSummary();
 }
 
-function loadSummary(){
+async function loadSummary(){
   const month=document.getElementById('summaryMonth').value;
   const cont=document.getElementById('summaryContent');
-  const docs=storageGetByMonth(month);
+  cont.innerHTML='<div class="no-records">⏳ กำลังโหลด...</div>';
+  const docs=await storageGetByMonth(month);
   if(!docs.length){cont.innerHTML='<div class="no-records">ไม่พบข้อมูลในเดือนนี้</div>';return;}
   if(currentSumTab==='monthly') renderSummaryMonthly(docs, month, cont);
   else renderSummaryDaily(docs, month, cont);
 }
 
 function buildShiftRoomTable(docs, shift){
-  // if shift provided, filter; if docs are already filtered pass shift=null
   const filtered = shift ? docs.filter(d=>d.shift===shift) : docs;
   const roomStats={};
   filtered.forEach(d=>{
@@ -766,12 +798,10 @@ function renderSummaryMonthly(docs, month, cont){
     สรุปผลประจำเดือน ${thaiMo} ${thaiY}
     <button class="del-month-btn" onclick="deleteMonth('${month}')">🗑 ลบข้อมูลทั้งเดือน</button>
   </div>
-
   <div class="sum-shift-section">
     <div class="sum-shift-header">☀️ กะเช้า 07:00 – 19:00 — สรุปตามห้อง</div>
     ${buildShiftRoomTable(docs,'day')}
   </div>
-
   <div class="sum-shift-section">
     <div class="sum-shift-header night-hdr">🌙 กะดึก 19:00 – 07:00 — สรุปตามห้อง</div>
     ${buildShiftRoomTable(docs,'night')}
@@ -783,24 +813,19 @@ function renderSummaryDaily(docs, month, cont){
   const [y,m]=month.split('-');
   const thaiMo=THAI_MONTHS[parseInt(m)-1];
   const thaiY=parseInt(y)+543;
-
   const byDate={};
   docs.forEach(d=>{if(!byDate[d.date])byDate[d.date]={day:[],night:[]};byDate[d.date][d.shift].push(d);});
   const dates=Object.keys(byDate).sort((a,b)=>b.localeCompare(a));
-
   let h=`<div class="month-title">
     สรุปรายวัน — ${thaiMo} ${thaiY}
     <button class="del-month-btn" onclick="deleteMonth('${month}')">🗑 ลบข้อมูลทั้งเดือน</button>
   </div>`;
-
   dates.forEach(date=>{
     const dayDocs=byDate[date];
     h+=`<div style="margin-bottom:22px">
       <div class="daily-date-row">📅 ${fmtThai(date)}</div>`;
-    // morning
     h+=`<div class="sum-shift-header" style="border-radius:0;border:1px solid var(--border);border-top:none">☀️ กะเช้า</div>`;
     h+=dayDocs.day.length?buildShiftRoomTable(dayDocs.day,null):'<div style="padding:8px 14px;color:#aaa;font-size:.78rem;background:#fff;border:1px solid var(--border);border-top:none">ไม่มีข้อมูลกะเช้า</div>';
-    // night
     h+=`<div class="sum-shift-header night-hdr" style="border-radius:0;border:1px solid var(--border);border-top:none">🌙 กะดึก</div>`;
     h+=dayDocs.night.length?buildShiftRoomTable(dayDocs.night,null):'<div style="padding:8px 14px;color:#aaa;font-size:.78rem;background:#fff;border:1px solid var(--border);border-top:none">ไม่มีข้อมูลกะดึก</div>';
     h+=`</div>`;
@@ -809,9 +834,9 @@ function renderSummaryDaily(docs, month, cont){
 }
 
 function deleteMonth(month){
-  showConfirm(`ลบข้อมูลทั้งหมดของเดือน ${month} ใช่หรือไม่? ไม่สามารถกู้คืนได้`,()=>{
-    const docs=storageGetByMonth(month);
-    docs.forEach(d=>storageDelete(d.id));
+  showConfirm(`ลบข้อมูลทั้งหมดของเดือน ${month} ใช่หรือไม่? ไม่สามารถกู้คืนได้`, async()=>{
+    const docs=await storageGetByMonth(month);
+    for(const d of docs) await storageDelete(d.id);
     loadSummary();
   });
 }
@@ -835,6 +860,35 @@ function fmtThai(ds){
   const d=new Date(ds+'T12:00:00');
   return `${d.getDate()} ${THAI_MONTHS[d.getMonth()]} ${d.getFullYear()+543}`;
 }
+
+function showLoading(on){
+  let el=document.getElementById('loadingBar');
+  if(!el){
+    el=document.createElement('div');
+    el.id='loadingBar';
+    el.style.cssText='position:fixed;top:0;left:0;width:100%;height:3px;background:var(--accent);z-index:9999;transition:opacity .3s';
+    el.innerHTML='<div style="height:100%;background:linear-gradient(90deg,var(--navy),var(--navy2));animation:ldbar 1s infinite linear"></div>';
+    document.head.insertAdjacentHTML('beforeend','<style>@keyframes ldbar{0%{width:0%}100%{width:100%}}</style>');
+    document.body.prepend(el);
+  }
+  el.style.opacity=on?'1':'0';
+}
+
+// Expose functions needed by inline onclick handlers
+window.showPage=showPage;
+window.changeDate=changeDate;
+window.onDateChange=onDateChange;
+window.saveShift=saveShift;
+window.clearShift=clearShift;
+window.setValEl=setValEl;
+window.toggleCk=toggleCk;
+window.loadHistory=loadHistory;
+window.loadSummary=loadSummary;
+window.switchSumTab=switchSumTab;
+window.editRecord=editRecord;
+window.confirmDelete=confirmDelete;
+window.deleteMonth=deleteMonth;
+window.closeModal=closeModal;
 </script>
 </body>
 </html>
