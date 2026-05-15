@@ -5,576 +5,665 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>Bed Exit Alarm – Bangkok Hospital Pattaya</title>
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 <style>
 :root{
   --navy:#1B3A6B;--navy2:#24509A;--red:#C0272D;
   --accent:#E8EEF8;--gray-header:#4A6FA5;
-  --border:#C5D3E8;--white:#fff;--bg:#EDF1F7;
+  --border:#C5D3E8;--bg:#EDF1F7;
   --text:#1a2a3a;--green:#1a7a3c;--green-bg:#E6F4EC;
-  --shadow:0 4px 24px rgba(27,58,107,.13);--radius:8px;
-  --font:'Sarabun',sans-serif;
-  /* ความกว้างคอลัมน์ใช้ตัวแปรเดียว เพื่อให้ทุก grid ตรงกัน */
-  --col-label: 300px;
-  --col-data: 80px;
+  --col-label:300px;--col-data:72px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh}
+body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
 
-/* TOPBAR */
-.topbar{
-  background:linear-gradient(135deg,var(--navy) 0%,var(--navy2) 100%);
-  color:#fff;padding:12px 20px;
-  display:flex;align-items:center;gap:14px;flex-wrap:wrap;
-  box-shadow:0 2px 12px rgba(0,0,0,.25);
-  position:sticky;top:0;z-index:100;
-}
+#login-page{min-height:100vh;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,var(--navy) 0%,var(--navy2) 100%);padding:20px}
+.login-box{background:#fff;border-radius:14px;padding:32px 28px;width:100%;max-width:360px;
+  box-shadow:0 8px 40px rgba(0,0,0,.3)}
+.login-logo{text-align:center;margin-bottom:24px}
+.login-logo h1{font-size:16px;font-weight:700;color:var(--navy);line-height:1.5;margin-bottom:4px}
+.login-logo p{font-size:12px;color:#8a94a8}
+.login-field{margin-bottom:14px}
+.login-field label{display:block;font-size:12px;font-weight:700;color:var(--navy);margin-bottom:5px}
+.login-field input{width:100%;border:1.5px solid var(--border);border-radius:7px;padding:10px 14px;
+  font-family:'Sarabun',sans-serif;font-size:14px;outline:none}
+.login-field input:focus{border-color:var(--navy)}
+.login-btn{width:100%;padding:12px;background:var(--navy);color:#fff;border:none;border-radius:7px;
+  font-family:'Sarabun',sans-serif;font-size:15px;font-weight:700;cursor:pointer;margin-top:6px}
+.login-error{background:#fff0f0;border:1px solid #e57373;border-radius:6px;padding:8px 12px;
+  font-size:13px;color:#c62828;margin-top:10px;text-align:center;display:none}
+.login-error.show{display:block}
+
+.topbar{background:linear-gradient(135deg,var(--navy) 0%,var(--navy2) 100%);color:#fff;
+  padding:12px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+  box-shadow:0 2px 12px rgba(0,0,0,.25);position:sticky;top:0;z-index:100}
 .topbar-title{flex:1;min-width:180px}
 .topbar-title h1{font-size:1rem;font-weight:700;line-height:1.3}
 .topbar-title p{font-size:.72rem;opacity:.8;margin-top:2px}
 .nav-tabs{display:flex;gap:5px;flex-wrap:wrap}
-.nav-btn{
-  background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);
-  color:#fff;padding:7px 14px;border-radius:5px;cursor:pointer;
-  font-family:var(--font);font-size:.8rem;font-weight:600;
-  transition:all .18s;white-space:nowrap;
-}
+.nav-btn{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;
+  padding:7px 14px;border-radius:5px;cursor:pointer;font-family:'Sarabun',sans-serif;
+  font-size:.8rem;font-weight:600;transition:all .18s;white-space:nowrap}
 .nav-btn.active{background:#fff;color:var(--navy)}
+.logout-btn{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.3);
+  color:rgba(255,255,255,.9);padding:6px 12px;border-radius:5px;
+  font-family:'Sarabun',sans-serif;font-size:.78rem;font-weight:600;cursor:pointer}
+.ward-badge{display:inline-block;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);
+  color:rgba(255,255,255,.9);font-size:11px;font-weight:700;padding:2px 10px;border-radius:20px;
+  letter-spacing:.5px;margin-left:4px}
 
-/* DATE BAR */
-.date-bar{
-  background:#fff;border-bottom:2px solid var(--border);
-  padding:10px 20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;
-  box-shadow:0 2px 6px rgba(0,0,0,.06);
-}
+.shift-bar{background:#fff;border-bottom:2px solid var(--border);padding:10px 20px;
+  display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.sg-label{font-size:.8rem;font-weight:700;color:#666;white-space:nowrap}
+.shift-group{display:flex;border:1.5px solid var(--border);border-radius:6px;overflow:hidden}
+.shift-tab{background:#f5f8ff;border:none;border-right:1px solid var(--border);padding:9px 20px;
+  cursor:pointer;font-family:'Sarabun',sans-serif;font-size:.82rem;font-weight:600;
+  color:#5a7aaa;transition:background .15s,color .15s;white-space:nowrap;line-height:1.3}
+.shift-tab:last-child{border-right:none}
+.shift-tab.active.day{background:var(--navy);color:#fff}
+.shift-tab.active.night{background:#2d3a6b;color:#fff}
+
+.date-bar{background:#fff;border-bottom:1px solid var(--border);padding:8px 20px;
+  display:flex;align-items:center;gap:12px;flex-wrap:wrap}
 .date-bar label{font-size:.82rem;font-weight:700;color:var(--navy)}
-.date-bar input[type=date], .date-bar input[type=month]{
-  border:1.5px solid var(--border);border-radius:5px;
-  padding:6px 10px;font-family:var(--font);font-size:.83rem;
-  color:var(--text);background:#f5f8ff;outline:none;cursor:pointer;
-}
-.date-nav button{
-  background:var(--accent);border:1px solid var(--border);border-radius:4px;
-  padding:5px 10px;cursor:pointer;font-size:.9rem;color:var(--navy);
-}
+.date-bar input[type=date],.date-bar input[type=month]{border:1.5px solid var(--border);
+  border-radius:5px;padding:6px 10px;font-family:'Sarabun',sans-serif;font-size:.83rem;
+  color:var(--text);background:#f5f8ff;outline:none;cursor:pointer}
+.date-nav button{background:var(--accent);border:1px solid var(--border);border-radius:4px;
+  padding:5px 10px;cursor:pointer;font-size:.9rem;color:var(--navy)}
 .date-display{font-size:.85rem;font-weight:600;color:var(--navy2)}
 
-.main{max-width:1200px;margin:0 auto;padding:20px 16px 48px}
+.main{max-width:1500px;margin:0 auto;padding:20px 16px 48px}
 
-.table-responsive {
-  width: 100%;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  margin-bottom: 10px;
-  border: 1px solid var(--border);
-  border-radius: 4px;
+/* ── scroll wrapper (เพิ่มเฉพาะส่วนนี้) ── */
+.table-scroll-wrap{
+  width:100%;
+  overflow-x:auto;
+  -webkit-overflow-scrolling:touch;
+  border:1px solid var(--border);
+  border-radius:4px 4px 0 0;
+  margin-bottom:0;
 }
+.table-scroll-wrap::-webkit-scrollbar{height:7px}
+.table-scroll-wrap::-webkit-scrollbar-track{background:#dce6f4}
+.table-scroll-wrap::-webkit-scrollbar-thumb{background:var(--navy2);border-radius:4px}
 
-/* ===== UNIFIED FORM GRID =====
-   ทุก row ใช้ grid template เดียวกัน เพื่อให้คอลัมน์ตรงกัน */
-.form-card {
-  min-width: 1100px;
-  background: #fff;
-  /* กำหนด grid หลักที่ทุก .grid-row ต้องใช้ */
-  display: grid;
-  grid-template-columns: var(--col-label) repeat(10, var(--col-data));
-  border: 1px solid var(--border);
+.scroll-hint-bar{
+  background:#dce6f4;
+  border:1px solid var(--border);
+  border-top:none;
+  padding:5px 14px;
+  font-size:.75rem;
+  color:var(--navy);
+  font-weight:600;
+  display:none;
+  align-items:center;
+  gap:5px;
 }
+.scroll-hint-bar .arr{animation:slidearr 1.2s ease-in-out infinite}
+@keyframes slidearr{0%,100%{transform:translateX(0)}50%{transform:translateX(6px)}}
+@media(max-width:960px){.scroll-hint-bar{display:flex}}
 
-/* แถวหัวตาราง (header row สีน้ำเงิน) */
-.grid-section-header {
-  grid-column: 1 / -1;
-  background: var(--navy);
-  color: #fff;
-  padding: 10px 14px;
-  font-size: .85rem;
-  font-weight: 700;
-  border-bottom: 1px solid rgba(255,255,255,.12);
-}
-
-/* เซลล์ label ซ้าย */
-.grid-label {
-  background: var(--gray-header);
-  color: #fff;
-  font-size: .78rem;
-  font-weight: 700;
-  padding: 0 10px;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  text-align: right;
-  border-right: 1px solid rgba(255,255,255,.2);
-  border-bottom: 1px solid rgba(255,255,255,.12);
-  min-height: 40px;
-  line-height: 1.35;
+/* ── form-card: เหมือนต้นฉบับทุกอย่าง ── */
+.form-card{
+  width:calc(var(--col-label) + 14*var(--col-data) + 2px);
+  min-width:calc(var(--col-label) + 14*var(--col-data) + 2px);
+  background:#fff;
+  display:grid;
+  grid-template-columns:var(--col-label) repeat(14,var(--col-data));
 }
 
-/* เซลล์ label แถว check (พื้นขาว) */
-.grid-label-check {
-  background: #f8faff;
-  color: var(--text);
-  font-size: .75rem;
-  font-weight: 500;
-  padding: 10px;
-  display: flex;
-  align-items: center;
-  border-right: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
-  min-height: 45px;
-  line-height: 1.4;
-}
+.grid-section-header{grid-column:1/-1;background:var(--navy);color:#fff;padding:10px 14px;
+  font-size:.85rem;font-weight:700;border-bottom:1px solid rgba(255,255,255,.12)}
 
-/* เซลล์ label แถว battery (พื้นอ่อน เด่น) */
-.grid-label-battery {
-  background: #f0f5ff;
-  color: var(--navy);
-  font-size: .78rem;
-  font-weight: 700;
-  padding: 0 10px;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  text-align: right;
-  border-right: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
-  min-height: 40px;
-}
+.grid-label{background:var(--gray-header);color:#fff;font-size:.78rem;font-weight:700;
+  padding:0 10px;display:flex;align-items:center;justify-content:flex-end;text-align:right;
+  border-right:1px solid rgba(255,255,255,.2);border-bottom:1px solid rgba(255,255,255,.12);
+  min-height:40px;line-height:1.35}
+.grid-label-check{background:#f8faff;color:var(--text);font-size:.75rem;font-weight:500;
+  padding:10px;display:flex;align-items:center;border-right:1px solid var(--border);
+  border-bottom:1px solid var(--border);min-height:48px;line-height:1.4}
+.grid-label-battery{background:#f0f5ff;color:var(--navy);font-size:.78rem;font-weight:700;
+  padding:0 10px;display:flex;align-items:center;justify-content:flex-end;text-align:right;
+  border-right:1px solid var(--border);border-bottom:1px solid var(--border);min-height:40px}
+.grid-label-inspector{background:var(--gray-header);color:#fff;font-size:.8rem;font-weight:700;
+  padding:0 10px;display:flex;align-items:center;justify-content:flex-end;text-align:right;
+  border-right:1px solid rgba(255,255,255,.2);border-bottom:1px solid rgba(255,255,255,.12);min-height:40px}
 
-/* เซลล์ข้อมูล input */
-.grid-cell-input {
-  border-right: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
-}
-.grid-cell-input input {
-  width: 100%;
-  height: 100%;
-  min-height: 40px;
-  border: none;
-  outline: none;
-  font-family: var(--font);
-  font-size: .73rem;
-  text-align: center;
-  background: #f0f5ff;
-  display: block;
-}
-.grid-cell-input input[type=date],
-.grid-cell-input input[type=time] {
-  padding: 2px;
-  font-size: .65rem;
-}
+.grid-cell-input{border-right:1px solid var(--border);border-bottom:1px solid var(--border);background:#f0f5ff}
+.grid-cell-input input{width:100%;height:100%;min-height:40px;border:none;outline:none;
+  font-family:'Sarabun',sans-serif;font-size:.73rem;text-align:center;background:transparent;display:block}
+.grid-cell-input input[type=date],.grid-cell-input input[type=time]{padding:2px;font-size:.63rem}
 
-/* เซลล์ checkbox */
-.ck-cell {
-  border-right: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  min-height: 45px;
-  background: #fff;
-}
-.ck-cell.checked { background: var(--green-bg); }
-.ck-mark { font-size: 1.2rem; color: var(--green); display: none; font-weight: 800; }
-.ck-cell.checked .ck-mark { display: block; }
+.ck-cell{border-right:1px solid var(--border);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;cursor:pointer;min-height:48px;background:#fff}
+.ck-cell.checked{background:var(--green-bg)}
+.ck-mark{font-size:1.2rem;color:var(--green);display:none;font-weight:800}
+.ck-cell.checked .ck-mark{display:block}
 
-/* เซลล์ battery select */
-.grid-cell-battery {
-  border-right: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.grid-cell-battery select {
-  font-size: .65rem;
-  width: 90%;
-  font-family: var(--font);
-}
+.grid-cell-battery{border-right:1px solid var(--border);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;background:#f9fbff}
+.grid-cell-battery select{font-size:.63rem;width:92%;font-family:'Sarabun',sans-serif;
+  border:1px solid #ccd;border-radius:3px;padding:2px}
 
-/* เซลล์ inspector */
-.grid-cell-inspector {
-  border-right: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
-}
-.grid-cell-inspector input {
-  width: 100%;
-  height: 100%;
-  min-height: 40px;
-  border: none;
-  outline: none;
-  font-family: var(--font);
-  font-size: .75rem;
-  text-align: center;
-  background: #f0f5ff;
-  display: block;
-}
+.grid-cell-inspector{border-right:1px solid var(--border);border-bottom:1px solid var(--border);background:#f0f5ff}
+.grid-cell-inspector input{width:100%;height:100%;min-height:40px;border:none;outline:none;
+  font-family:'Sarabun',sans-serif;font-size:.75rem;text-align:center;background:transparent;display:block}
 
-/* inspector label ซ้าย */
-.grid-label-inspector {
-  background: var(--gray-header);
-  color: #fff;
-  font-size: .8rem;
-  font-weight: 700;
-  padding: 0 10px;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  text-align: right;
-  border-right: 1px solid rgba(255,255,255,.2);
-  min-height: 40px;
-}
-
-.shift-label{display:flex;align-items:center;gap:12px;margin:20px 0 10px}
-.shift-badge{background:var(--navy);color:#fff;padding:5px 16px;border-radius:20px;font-size:.8rem;font-weight:700;white-space:nowrap}
+.shift-page-header{display:flex;align-items:center;gap:12px;margin:16px 0 10px}
+.shift-badge{padding:6px 20px;border-radius:20px;font-size:.85rem;font-weight:700;color:#fff}
+.shift-badge.day{background:var(--navy)}
 .shift-badge.night{background:#2d3a6b}
 
-.ready-box { background: #fff; padding: 12px 20px; border: 1px solid var(--border); border-top: none; display: flex; gap: 20px; font-size: 0.85rem; color: var(--navy); font-weight: bold; align-items: center; border-radius: 0 0 8px 8px; }
+.ready-box{background:#fff;padding:12px 20px;border:1px solid var(--border);border-top:none;
+  display:flex;gap:20px;font-size:.85rem;color:var(--navy);font-weight:bold;
+  align-items:center;border-radius:0 0 4px 4px}
 
-/* TABLES */
-.room-table-hist{width:100%; border-collapse:collapse; background:#fff;}
-.room-table-hist th{background:var(--gray-header); color:#fff; padding:10px 8px; font-size:.75rem; text-align:center; border:1px solid rgba(255,255,255,0.2)}
-.room-table-hist td{padding:8px; font-size:.8rem; border:1px solid #ddd; text-align:center;}
-.dot-check{color:var(--green); font-weight:bold;}
+.room-table-hist{width:100%;border-collapse:collapse;background:#fff}
+.room-table-hist th{background:var(--gray-header);color:#fff;padding:9px 8px;font-size:.75rem;
+  text-align:center;border:1px solid rgba(255,255,255,.2)}
+.room-table-hist td{padding:8px;font-size:.8rem;border:1px solid #ddd;text-align:center}
+.dot-check{color:var(--green);font-weight:bold}
 
-/* MODAL */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:999;display:none;align-items:center;justify-content:center;padding:20px}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:999;display:none;
+  align-items:center;justify-content:center;padding:20px}
 .modal-overlay.open{display:flex}
-.modal-box{background:#fff;border-radius:var(--radius);max-width:400px;width:100%;padding:20px;box-shadow:0 10px 30px rgba(0,0,0,0.3)}
-
-.btn-del-main{background:var(--red); color:#fff; padding:8px 15px; border-radius:5px; border:none; cursor:pointer; font-size:.8rem; font-weight:bold;}
-.btn-edit-sm{background:#fff; color:var(--navy); border:1px solid var(--navy); padding:4px 10px; border-radius:4px; cursor:pointer; font-size:.75rem; font-weight:bold;}
-.btn-del-sm{background:#fff; color:var(--red); border:1px solid var(--red); padding:4px 10px; border-radius:4px; cursor:pointer; font-size:.75rem; font-weight:bold;}
+.modal-box{background:#fff;border-radius:8px;max-width:400px;width:100%;padding:20px;
+  box-shadow:0 10px 30px rgba(0,0,0,.3)}
+.btn-del-main{background:var(--red);color:#fff;padding:8px 15px;border-radius:5px;border:none;
+  cursor:pointer;font-size:.8rem;font-weight:bold}
+.btn-edit-sm{background:#fff;color:var(--navy);border:1px solid var(--navy);padding:4px 10px;
+  border-radius:4px;cursor:pointer;font-size:.75rem;font-weight:bold}
+.btn-del-sm{background:#fff;color:var(--red);border:1px solid var(--red);padding:4px 10px;
+  border-radius:4px;cursor:pointer;font-size:.75rem;font-weight:bold}
+.table-responsive{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;
+  margin-bottom:0;border:1px solid var(--border);border-radius:4px 4px 0 0}
 </style>
 </head>
 <body>
 
-<div class="topbar">
-  <div class="topbar-title">
-    <h1>บันทึก Bed Exit Alarm (กระดุม)</h1>
-    <p>Bangkok Hospital Pattaya</p>
-  </div>
-  <div class="nav-tabs">
-    <button class="nav-btn active" id="nav-form" onclick="showPage('form')">📋 บันทึก</button>
-    <button class="nav-btn" id="nav-history" onclick="showPage('history')">🗂 ประวัติ</button>
-    <button class="nav-btn" id="nav-summary" onclick="showPage('summary')">📊 สรุปผล</button>
-  </div>
-</div>
-
-<div class="date-bar" id="date-bar-container">
-  <label>📅 วันที่ :</label>
-  <div class="date-nav"><button onclick="changeDate(-1)">◀</button></div>
-  <input type="date" id="globalDate" onchange="onDateChange()"/>
-  <div class="date-nav"><button onclick="changeDate(1)">▶</button></div>
-  <span class="date-display" id="dateDisplay"></span>
-</div>
-
-<div id="page-form" class="main">
-  <div class="shift-label"><span class="shift-badge">☀️ กะเช้า 07:00 – 19:00</span></div>
-  <div class="table-responsive"><div class="form-card" id="card-day"></div></div>
-  <div class="ready-box">
-    <span>ความพร้อมใช้งาน:</span>
-    <label><input type="radio" name="ready_day" value="พร้อมใช้" onchange="setReady('day', this.value)"> พร้อมใช้</label>
-    <label><input type="radio" name="ready_day" value="ไม่พร้อมใช้" onchange="setReady('day', this.value)"> ไม่พร้อมใช้</label>
-  </div>
-  <div style="margin-top:10px; display:flex; gap:10px; margin-bottom:30px">
-    <button class="nav-btn" style="background:var(--navy)" onclick="saveShift('day')">💾 บันทึกกะเช้า</button>
-    <button class="nav-btn" style="background:#fff; color:var(--navy); border:1px solid var(--border)" onclick="clearShift('day')">🗑 ล้าง</button>
-    <span id="status-day" style="color:var(--green); font-weight:700; opacity:0; transition: .3s">✅ บันทึกแล้ว</span>
-  </div>
-
-  <div class="shift-label"><span class="shift-badge night">🌙 กะดึก 19:00 – 07:00</span></div>
-  <div class="table-responsive"><div class="form-card" id="card-night"></div></div>
-  <div class="ready-box">
-    <span>ความพร้อมใช้งาน:</span>
-    <label><input type="radio" name="ready_night" value="พร้อมใช้" onchange="setReady('night', this.value)"> พร้อมใช้</label>
-    <label><input type="radio" name="ready_night" value="ไม่พร้อมใช้" onchange="setReady('night', this.value)"> ไม่พร้อมใช้</label>
-  </div>
-  <div style="margin-top:10px; display:flex; gap:10px; margin-bottom:40px">
-    <button class="nav-btn" style="background:var(--navy)" onclick="saveShift('night')">💾 บันทึกกะดึก</button>
-    <button class="nav-btn" style="background:#fff; color:var(--navy); border:1px solid var(--border)" onclick="clearShift('night')">🗑 ล้าง</button>
-    <span id="status-night" style="color:var(--green); font-weight:700; opacity:0; transition: .3s">✅ บันทึกแล้ว</span>
-  </div>
-</div>
-
-<div id="page-history" class="main" style="display:none">
-  <div style="background:#fff; padding:15px; border-radius:8px; border:1px solid var(--border); margin-bottom:15px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px">
-    <div>
-      <label style="font-size:.8rem; font-weight:bold; color:var(--navy)">📅 เลือกเดือนประวัติ:</label>
-      <input type="month" id="historyMonth" onchange="loadHistory()" style="padding:6px; border-radius:5px; border:1px solid var(--border)"/>
+<div id="login-page">
+  <div class="login-box">
+    <div class="login-logo">
+      <div style="font-size:36px;margin-bottom:8px">🔔</div>
+      <h1>บันทึก Bed Exit Alarm<br>Bangkok Hospital Pattaya</h1>
+      <p>กรุณาเข้าสู่ระบบด้วยบัญชี Ward ของคุณ</p>
     </div>
-    <button class="btn-del-main" onclick="deleteMonth()">🗑 ลบข้อมูลทั้งเดือน</button>
+    <div class="login-field">
+      <label>Username (Ward)</label>
+      <input type="text" id="login-user" placeholder="เช่น ward14e" autocomplete="username" autocapitalize="none">
+    </div>
+    <div class="login-field">
+      <label>Password</label>
+      <input type="password" id="login-pass" placeholder="รหัสผ่าน" autocomplete="current-password">
+    </div>
+    <button class="login-btn" onclick="doLogin()">เข้าสู่ระบบ</button>
+    <div class="login-error" id="login-error">Username หรือ Password ไม่ถูกต้อง</div>
   </div>
-  <div id="historyList"></div>
 </div>
 
-<div id="page-summary" class="main" style="display:none">
-  <div style="background:#fff; padding:15px; border-radius:8px; border:1px solid var(--border); margin-bottom:15px; display:flex; gap:20px; flex-wrap:wrap;">
-    <div>
-      <label style="font-weight:bold">📊 สรุปรายงานเดือน:</label>
-      <input type="month" id="summaryMonth" onchange="loadSummary('month')" style="padding:6px; border-radius:5px; border:1px solid var(--border)"/>
+<div id="app-page" style="display:none">
+  <div class="topbar">
+    <div class="topbar-title">
+      <h1>บันทึก Bed Exit Alarm (กระดุม)</h1>
+      <p>Bangkok Hospital Pattaya <span class="ward-badge" id="ward-badge"></span></p>
     </div>
-    <div>
-      <label style="font-weight:bold">📅 หรือระบุรายวัน:</label>
-      <input type="date" id="summaryDate" onchange="loadSummary('day')" style="padding:6px; border-radius:5px; border:1px solid var(--border)"/>
+    <div class="nav-tabs">
+      <button class="nav-btn active" id="nav-form"    onclick="showPage('form')">📋 บันทึก</button>
+      <button class="nav-btn"        id="nav-history" onclick="showPage('history')">🗂 ประวัติ</button>
+      <button class="nav-btn"        id="nav-summary" onclick="showPage('summary')">📊 สรุปผล</button>
+      <button class="logout-btn" onclick="doLogout()">ออกจากระบบ</button>
     </div>
   </div>
-  <div id="summaryContent" class="table-responsive"></div>
+
+  <div class="shift-bar" id="shift-bar">
+    <span class="sg-label">☀️ กะเช้า:</span>
+    <div class="shift-group">
+      <button class="shift-tab day active" id="tab-day-1" onclick="selectShiftRound('day',1)">
+        รอบที่ 1<br><span style="font-size:.7rem;font-weight:400">07:00–13:00</span>
+      </button>
+      <button class="shift-tab day" id="tab-day-2" onclick="selectShiftRound('day',2)">
+        รอบที่ 2<br><span style="font-size:.7rem;font-weight:400">13:00–19:00</span>
+      </button>
+    </div>
+    <span class="sg-label" style="margin-left:8px">🌙 กะดึก:</span>
+    <div class="shift-group">
+      <button class="shift-tab night" id="tab-night-1" onclick="selectShiftRound('night',1)">
+        รอบที่ 1<br><span style="font-size:.7rem;font-weight:400">19:00–01:00</span>
+      </button>
+      <button class="shift-tab night" id="tab-night-2" onclick="selectShiftRound('night',2)">
+        รอบที่ 2<br><span style="font-size:.7rem;font-weight:400">01:00–07:00</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="date-bar" id="date-bar-container">
+    <label>📅 วันที่ :</label>
+    <div class="date-nav"><button onclick="changeDate(-1)">◀</button></div>
+    <input type="date" id="globalDate" onchange="onDateChange()"/>
+    <div class="date-nav"><button onclick="changeDate(1)">▶</button></div>
+    <span class="date-display" id="dateDisplay"></span>
+  </div>
+
+  <div id="page-form" class="main">
+    <div class="shift-page-header">
+      <span class="shift-badge day" id="current-shift-badge">☀️ กะเช้า รอบที่ 1 (07:00–13:00)</span>
+    </div>
+
+    <div class="table-scroll-wrap">
+      <div class="form-card" id="card-main"></div>
+    </div>
+    <div class="scroll-hint-bar">
+      <span class="arr">→</span> เลื่อนซ้าย-ขวาเพื่อดูกระดุมทั้งหมด (14 ช่อง)
+    </div>
+
+    <div class="ready-box">
+      <span>ความพร้อมใช้งาน:</span>
+      <label><input type="radio" name="ready_main" value="พร้อมใช้"    onchange="setReady(this.value)"> พร้อมใช้</label>
+      <label><input type="radio" name="ready_main" value="ไม่พร้อมใช้" onchange="setReady(this.value)"> ไม่พร้อมใช้</label>
+    </div>
+    <div style="margin-top:10px;display:flex;gap:10px;align-items:center;margin-bottom:40px">
+      <button class="nav-btn" style="background:var(--navy)" onclick="saveShift()">💾 บันทึก</button>
+      <button class="nav-btn" style="background:#fff;color:var(--navy);border:1px solid var(--border)" onclick="clearShift()">🗑 ล้าง</button>
+      <span id="status-main" style="color:var(--green);font-weight:700;opacity:0;transition:.4s">✅ บันทึกแล้ว</span>
+    </div>
+  </div>
+
+  <div id="page-history" class="main" style="display:none">
+    <div style="background:#fff;padding:15px;border-radius:8px;border:1px solid var(--border);
+      margin-bottom:15px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+      <div>
+        <label style="font-size:.8rem;font-weight:bold;color:var(--navy)">📅 เลือกเดือนประวัติ:</label>
+        <input type="month" id="historyMonth" onchange="loadHistory()"
+          style="padding:6px;border-radius:5px;border:1px solid var(--border)"/>
+      </div>
+      <button class="btn-del-main" onclick="deleteMonth()">🗑 ลบข้อมูลทั้งเดือน</button>
+    </div>
+    <div id="historyList"></div>
+  </div>
+
+  <div id="page-summary" class="main" style="display:none">
+    <div style="background:#fff;padding:15px;border-radius:8px;border:1px solid var(--border);
+      margin-bottom:15px;display:flex;gap:20px;flex-wrap:wrap;">
+      <div>
+        <label style="font-weight:bold">📊 สรุปรายงานเดือน:</label>
+        <input type="month" id="summaryMonth" onchange="loadSummary('month')"
+          style="padding:6px;border-radius:5px;border:1px solid var(--border)"/>
+      </div>
+      <div>
+        <label style="font-weight:bold">📅 หรือระบุรายวัน:</label>
+        <input type="date" id="summaryDate" onchange="loadSummary('day')"
+          style="padding:6px;border-radius:5px;border:1px solid var(--border)"/>
+      </div>
+    </div>
+    <div id="summaryContent" class="table-responsive"></div>
+  </div>
 </div>
 
 <div class="modal-overlay" id="confirmModal">
   <div class="modal-box">
-    <h3 style="color:var(--navy); margin-bottom:10px">⚠️ ยืนยันการดำเนินการ</h3>
-    <p id="confirmMsg" style="font-size:.9rem; margin-bottom:20px; line-height:1.4"></p>
-    <div style="display:flex; justify-content:flex-end; gap:10px">
+    <h3 style="color:var(--navy);margin-bottom:10px">⚠️ ยืนยันการดำเนินการ</h3>
+    <p id="confirmMsg" style="font-size:.9rem;margin-bottom:20px;line-height:1.4"></p>
+    <div style="display:flex;justify-content:flex-end;gap:10px">
       <button class="btn-edit-sm" onclick="closeModal()">ยกเลิก</button>
-      <button class="nav-btn" id="confirmOkBtn" style="background:var(--red); border:none">ตกลง</button>
+      <button class="nav-btn" id="confirmOkBtn" style="background:var(--red);border:none">ตกลง</button>
     </div>
   </div>
 </div>
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getDatabase, ref, set, get, remove } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyC2Z2vTVhzepWHtE4F9g1df97itPMGfOyA",
-  authDomain: "bed-exit-alarm.firebaseapp.com",
-  databaseURL: "https://bed-exit-alarm-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "bed-exit-alarm",
-  storageBucket: "bed-exit-alarm.firebasestorage.app",
-  messagingSenderId: "405252502824",
-  appId: "1:405252502824:web:237ac2475c74841116cc1d"
+<script>
+var WARD_ACCOUNTS = {
+  "ward14e":"password1","ward15":"password2","ward16":"password3",
+  "icu":"password4","er":"password5"
 };
 
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
+firebase.initializeApp({
+  apiKey:"AIzaSyC2Z2vTVhzepWHtE4F9g1df97itPMGfOyA",
+  authDomain:"bed-exit-alarm.firebaseapp.com",
+  databaseURL:"https://bed-exit-alarm-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId:"bed-exit-alarm",
+  storageBucket:"bed-exit-alarm.firebasestorage.app",
+  messagingSenderId:"405252502824",
+  appId:"1:405252502824:web:237ac2475c74841116cc1d"
+});
+var db = firebase.database();
 
-const COLS = 10;
-const THAI_MONTHS=['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
-
-const CHECKS = [
-    {k:'gateway', l:'เช็คการเชื่อมต่อระหว่าง Gateway และ Sensor (กระดุม) หากไม่เชื่อมต่อ ให้เช็คว่าเครื่องไอแพดเปิดบลูทูธอยู่หรือไม่'}, 
-    {k:'wifi', l:'เช็คการเชื่อมต่อ wifi'}, 
-    {k:'attach', l:'เช็คการติดกระดุมถูกต้องหรือไม่'}, 
-    {k:'sensor', l:'เช็คการเปิด-ปิด ของ Sensor (กระดุม)'}, 
-    {k:'dist', l:'เช็คระยะห่าง ระหว่าง Gateway และ Sensor (กระดุม) ไม่ควรห่างเกิน 8-10 เมตร เพราะเป็นระยะของบลูทูธ'}
+var COLS = 14;
+var THAI_MONTHS = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน',
+  'กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+var CHECKS = [
+  {k:'gateway',l:'เช็คการเชื่อมต่อระหว่าง Gateway และ Sensor (กระดุม) หากไม่เชื่อมต่อ ให้เช็คว่าเครื่องไอแพดเปิดบลูทูธอยู่หรือไม่'},
+  {k:'wifi',   l:'เช็คการเชื่อมต่อ wifi'},
+  {k:'attach', l:'เช็คการติดกระดุมถูกต้องหรือไม่'},
+  {k:'sensor', l:'เช็คการเปิด-ปิด ของ Sensor (กระดุม)'},
+  {k:'dist',   l:'เช็คระยะห่าง ระหว่าง Gateway และ Sensor (กระดุม) ไม่ควรห่างเกิน 8-10 เมตร เพราะเป็นระยะของบลูทูธ'}
 ];
+var SHIFT_LABELS = {
+  'day-1':'☀️ กะเช้า รอบที่ 1 (07:00–13:00)',
+  'day-2':'☀️ กะเช้า รอบที่ 2 (13:00–19:00)',
+  'night-1':'🌙 กะดึก รอบที่ 1 (19:00–01:00)',
+  'night-2':'🌙 กะดึก รอบที่ 2 (01:00–07:00)'
+};
 
-let formData = { day: { columns: emptyCols(), readyStatus: '' }, night: { columns: emptyCols(), readyStatus: '' } };
+var currentWard  = null;
+var currentShift = 'day';
+var currentRound = 1;
+var formData     = {};
+
+function shiftKey()     { return currentShift+'-'+currentRound; }
+function dbKeyFor(date) { return date+'_'+currentShift+'_r'+currentRound; }
+function wardRef(path)  { return db.ref('wards/'+currentWard+'/bedExitAlarm/'+path); }
 
 function emptyCols() {
-  let r = {};
-  for(let i=0; i<COLS; i++) r[i] = { device:'', room:'', date:'', time:'', battery:'', gateway:false, wifi:false, attach:false, sensor:false, dist:false, inspector:'' };
+  var r = {};
+  for (var i=0;i<COLS;i++)
+    r[i]={device:'',room:'',date:'',time:'',battery:'',
+          gateway:false,wifi:false,attach:false,sensor:false,dist:false,inspector:''};
   return r;
 }
+function emptyEntry() { return {columns:emptyCols(),readyStatus:''}; }
 
-window.onDateChange = async () => {
-  const date = document.getElementById('globalDate').value;
-  updateDateDisplay();
-  for(let s of ['day','night']) {
-    const snap = await get(ref(db, `bedExitAlarm/${date}_${s}`));
-    if(snap.exists()) {
-      formData[s] = snap.val();
-      document.getElementsByName(`ready_${s}`).forEach(r => r.checked = (r.value === formData[s].readyStatus));
-    } else {
-      formData[s] = { columns: emptyCols(), readyStatus: '' };
-      document.getElementsByName(`ready_${s}`).forEach(r => r.checked = false);
-    }
-    renderCard(s);
-  }
-};
+function doLogin() {
+  var user = document.getElementById('login-user').value.trim().toLowerCase();
+  var pass = document.getElementById('login-pass').value;
+  var err  = document.getElementById('login-error');
+  if (WARD_ACCOUNTS[user] && WARD_ACCOUNTS[user]===pass) {
+    currentWard = user;
+    sessionStorage.setItem('bea_ward', user);
+    err.classList.remove('show');
+    document.getElementById('login-page').style.display = 'none';
+    document.getElementById('app-page').style.display   = 'block';
+    document.getElementById('ward-badge').textContent   = '🏥 '+user.toUpperCase();
+    initApp();
+  } else { err.classList.add('show'); }
+}
+function doLogout() {
+  if (!confirm('ออกจากระบบใช่ไหม?')) return;
+  currentWard = null;
+  sessionStorage.removeItem('bea_ward');
+  document.getElementById('app-page').style.display  = 'none';
+  document.getElementById('login-page').style.display = 'flex';
+  document.getElementById('login-user').value = '';
+  document.getElementById('login-pass').value = '';
+}
+document.getElementById('login-pass').addEventListener('keydown',function(e){if(e.key==='Enter')doLogin();});
 
-window.renderCard = (shift) => {
-  const card = document.getElementById('card-' + shift);
-  const data = formData[shift].columns;
-  const date = document.getElementById('globalDate').value;
+function initApp() {
+  var today = new Date().toISOString().split('T')[0];
+  document.getElementById('globalDate').value   = today;
+  document.getElementById('historyMonth').value = today.substring(0,7);
+  document.getElementById('summaryMonth').value = today.substring(0,7);
+  document.getElementById('summaryDate').value  = today;
+  currentShift='day'; currentRound=1; formData={};
+  updateTabStyles(); updateShiftBadge(); onDateChange();
+}
 
-  // ใช้ innerHTML สร้าง grid เดียว — ทุก row อยู่ใน .form-card ซึ่ง display:grid
-  // grid-template-columns: var(--col-label) repeat(10, var(--col-data))
-  // ทำให้ทุกแถวตรงกันอัตโนมัติ
-
-  let h = '';
-
-  // ──── แถวข้อมูลพื้นฐาน ────
-  const infoRows = [
-    {l:'เบอร์กระดุม', f:'device', t:'text'},
-    {l:'Room', f:'room', t:'text'},
-    {l:'Date', f:'date', t:'date'},
-    {l:'Time', f:'time', t:'time'}
-  ];
-
-  infoRows.forEach(row => {
-    h += `<div class="grid-label">${row.l}</div>`;
-    for(let i=0; i<COLS; i++) {
-      let v = data[i][row.f] || (row.f==='date' ? date : '');
-      h += `<div class="grid-cell-input"><input type="${row.t}" value="${v}" oninput="updateVal('${shift}',${i},'${row.f}',this.value)"></div>`;
-    }
+function selectShiftRound(shift, round) {
+  currentShift=shift; currentRound=round;
+  updateTabStyles(); updateShiftBadge(); loadCurrentShift();
+}
+function updateTabStyles() {
+  ['day-1','day-2','night-1','night-2'].forEach(function(k){
+    var p=k.split('-'), s=p[0], r=parseInt(p[1]);
+    var el=document.getElementById('tab-'+s+'-'+r);
+    if(el) el.className='shift-tab '+s+(s===currentShift&&r===currentRound?' active':'');
   });
+}
+function updateShiftBadge() {
+  var b=document.getElementById('current-shift-badge');
+  b.textContent=SHIFT_LABELS[shiftKey()];
+  b.className='shift-badge '+currentShift;
+}
 
-  // ──── header section ────
-  h += `<div class="grid-section-header">ตรวจสอบการใช้งานของ Bed Exit Alarm</div>`;
+function onDateChange() { updateDateDisplay(); formData={}; loadCurrentShift(); }
 
-  // ──── แถวแบตเตอรี่ ────
-  h += `<div class="grid-label-battery">เช็คแบตเตอรี่ สถานะ</div>`;
-  for(let i=0; i<COLS; i++) {
-    h += `<div class="grid-cell-battery"><select onchange="updateVal('${shift}',${i},'battery',this.value)">
-      <option value="">-</option>
-      <option value="High" ${data[i].battery==='High'?'selected':''}>🟢 High</option>
-      <option value="Medium" ${data[i].battery==='Medium'?'selected':''}>🟡 Med</option>
-      <option value="Low" ${data[i].battery==='Low'?'selected':''}>🔴 Low</option>
-    </select></div>`;
-  }
-
-  // ──── แถว checkboxes ────
-  CHECKS.forEach(ck => {
-    h += `<div class="grid-label-check">${ck.l}</div>`;
-    for(let i=0; i<COLS; i++) {
-      h += `<div class="ck-cell ${data[i][ck.k]?'checked':''}" onclick="toggleCk('${shift}',${i},'${ck.k}',this)"><span class="ck-mark">✔</span></div>`;
-    }
-  });
-
-  // ──── แถวผู้ตรวจสอบ ────
-  h += `<div class="grid-label-inspector">ผู้ตรวจสอบ</div>`;
-  for(let i=0; i<COLS; i++) {
-    h += `<div class="grid-cell-inspector"><input type="text" value="${data[i].inspector||''}" oninput="updateVal('${shift}',${i},'inspector',this.value)"></div>`;
-  }
-
-  card.innerHTML = h;
-};
-
-window.updateVal=(s,i,f,v)=>{ formData[s].columns[i][f]=v; };
-window.setReady=(s,v)=>{ formData[s].readyStatus=v; };
-window.toggleCk=(s,i,k,el)=>{ formData[s].columns[i][k]=!formData[s].columns[i][k]; el.classList.toggle('checked'); };
-
-window.saveShift = async (s) => {
-  const date = document.getElementById('globalDate').value;
-  await set(ref(db, `bedExitAlarm/${date}_${s}`), { ...formData[s], date, shift: s });
-  const st = document.getElementById('status-'+s); st.style.opacity=1; setTimeout(()=>st.style.opacity=0, 2000);
-};
-
-window.clearShift = (s) => openModal(`ล้างข้อมูลที่กรอกอยู่ของกะ${s==='day'?'เช้า':'ดึก'}?`, () => {
-  formData[s] = { columns: emptyCols(), readyStatus: '' };
-  document.getElementsByName(`ready_${s}`).forEach(r => r.checked = false);
-  renderCard(s);
-});
-
-window.loadHistory = async () => {
-  const month = document.getElementById('historyMonth').value;
-  const snap = await get(ref(db, 'bedExitAlarm'));
-  const list = document.getElementById('historyList');
-  list.innerHTML = '';
-  if(!snap.exists()) { list.innerHTML = '<p style="text-align:center; padding:20px; color:#999">ไม่พบข้อมูลประวัติ</p>'; return; }
-  
-  const allData = Object.values(snap.val()).filter(d => d.date && d.date.startsWith(month));
-  const byDate = {};
-  allData.forEach(d => { if(!byDate[d.date]) byDate[d.date]=[]; byDate[d.date].push(d); });
-
-  Object.keys(byDate).sort().reverse().forEach(date => {
-    let dayDiv = document.createElement('div');
-    dayDiv.className = 'day-group';
-    dayDiv.style = "margin-bottom:20px; border:1px solid var(--border); background:#fff; border-radius:8px; overflow:hidden;";
-    let h = `<div style="background:var(--navy); color:#fff; padding:10px 15px; display:flex; justify-content:space-between; align-items:center;">
-              <span style="font-weight:bold">📅 ${fmtThai(date)}</span>
-              <button class="btn-del-sm" style="background:var(--red); color:#fff" onclick="deleteDay('${date}')">ลบทั้งวัน</button>
-            </div>`;
-    
-    byDate[date].sort((a,b)=>a.shift==='day'?-1:1).forEach(d => {
-      const rooms = Object.values(d.columns).filter(c => c.room);
-      h += `<div style="background:#f9f9f9; padding:8px 15px; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center;">
-              <span style="font-size:.85rem; font-weight:700; color:var(--navy)">กะ${d.shift==='day'?'เช้า':'ดึก'} (สถานะ: ${d.readyStatus||'-'})</span>
-              <div style="display:flex; gap:5px"><button class="btn-edit-sm" onclick="editEntry('${d.date}','${d.shift}')">แก้ไข</button><button class="btn-del-sm" onclick="deleteEntry('${d.date}_${d.shift}')">ลบ</button></div>
-            </div>`;
-      if(rooms.length){
-        h += `<div class="table-responsive"><table class="room-table-hist"><thead><tr><th>ห้อง</th><th>เบอร์กระดุม</th><th>เวลา</th><th>แบต</th><th>GW</th><th>Wifi</th><th>ติดกระดุม</th><th>Sensor</th><th>ระยะ</th><th>ผู้ตรวจ</th></tr></thead><tbody>`;
-        rooms.forEach(c => {
-          h += `<tr><td><b>${c.room}</b></td><td>${c.device||'-'}</td><td>${c.time||'-'}</td><td>${c.battery||'-'}</td>
-            <td>${c.gateway?'<span class="dot-check">✔</span>':'-'}</td>
-            <td>${c.wifi?'<span class="dot-check">✔</span>':'-'}</td>
-            <td>${c.attach?'<span class="dot-check">✔</span>':'-'}</td>
-            <td>${c.sensor?'<span class="dot-check">✔</span>':'-'}</td>
-            <td>${c.dist?'<span class="dot-check">✔</span>':'-'}</td>
-            <td>${c.inspector||'-'}</td></tr>`;
-        });
-        h += `</tbody></table></div>`;
-      }
+function loadCurrentShift() {
+  var date = document.getElementById('globalDate').value;
+  var key  = shiftKey();
+  wardRef(dbKeyFor(date)).get().then(function(snap){
+    formData[key] = snap.exists() ? snap.val() : emptyEntry();
+    if (!formData[key].columns) formData[key].columns = emptyCols();
+    document.getElementsByName('ready_main').forEach(function(r){
+      r.checked = (r.value===formData[key].readyStatus);
     });
-    dayDiv.innerHTML = h;
-    list.appendChild(dayDiv);
+    renderCard();
+  }).catch(function(){
+    formData[key]=emptyEntry(); renderCard();
   });
-};
+}
 
-window.loadSummary = async (type = 'month') => {
-  const m = document.getElementById('summaryMonth').value;
-  const dDay = document.getElementById('summaryDate').value;
-  const snap = await get(ref(db, 'bedExitAlarm'));
-  const content = document.getElementById('summaryContent');
-  if(!snap.exists()) { content.innerHTML = '<p style="text-align:center; padding:20px;">ไม่มีข้อมูล</p>'; return; }
-  let filteredData = Object.values(snap.val()).filter(d => type === 'day' ? d.date === dDay : d.date && d.date.startsWith(m));
-  filteredData.sort((a,b) => a.date.localeCompare(b.date) || (a.shift === 'day' ? -1 : 1));
-  let h = `<table class="room-table-hist" style="min-width:100%"><thead><tr style="background:var(--navy); color:#fff">
-          <th style="width:120px">วันที่/กะ</th><th>Room</th><th>เบอร์กระดุม</th><th>แบตเตอรี่</th><th>ผู้ตรวจสอบ</th><th>ความพร้อมใช้งาน</th>
-          </tr></thead><tbody>`;
-  if(filteredData.length === 0) h += `<tr><td colspan="6" style="padding:20px; color:#999;">ไม่พบข้อมูลในช่วงเวลาที่เลือก</td></tr>`;
-  filteredData.forEach(d => {
-    const rows = Object.values(d.columns).filter(c => c.room);
-    rows.forEach((c, idx) => {
-      h += `<tr><td style="font-size:0.7rem; color:#666">${idx===0? `<b>${d.date}</b><br>(${d.shift==='day'?'เช้า':'ดึก'})` : ''}</td>
-        <td><b>${c.room}</b></td><td>${c.device || '-'}</td><td style="color:${c.battery==='Low'?'red':(c.battery==='Medium'?'orange':'green')}">${c.battery || '-'}</td>
-        <td>${c.inspector || '-'}</td><td style="font-weight:bold; color:${d.readyStatus==='พร้อมใช้'?'#1a7a3c':'#C0272D'}">${d.readyStatus || '-'}</td></tr>`;
+function renderCard() {
+  var card = document.getElementById('card-main');
+  var key  = shiftKey();
+  if (!formData[key]) formData[key]=emptyEntry();
+  var data = formData[key].columns;
+  var date = document.getElementById('globalDate').value;
+  var h='';
+
+  [{l:'เบอร์กระดุม',f:'device',t:'text'},
+   {l:'Room',f:'room',t:'text'},
+   {l:'Date',f:'date',t:'date'},
+   {l:'Time',f:'time',t:'time'}].forEach(function(row){
+    h+='<div class="grid-label">'+row.l+'</div>';
+    for(var i=0;i<COLS;i++){
+      var v=ea(data[i][row.f]||(row.f==='date'?date:''));
+      h+='<div class="grid-cell-input"><input type="'+row.t+'" value="'+v+'" oninput="updateVal('+i+',\''+row.f+'\',this.value)"></div>';
+    }
+  });
+
+  h+='<div class="grid-section-header">ตรวจสอบการใช้งานของ Bed Exit Alarm</div>';
+
+  h+='<div class="grid-label-battery">เช็คแบตเตอรี่ สถานะ</div>';
+  for(var i=0;i<COLS;i++){
+    var bv=data[i].battery||'';
+    h+='<div class="grid-cell-battery"><select onchange="updateVal('+i+',\'battery\',this.value)">'
+      +'<option value="">-</option>'
+      +'<option value="High"'  +(bv==='High'  ?' selected':'')+'>🟢 High</option>'
+      +'<option value="Medium"'+(bv==='Medium'?' selected':'')+'>🟡 Med</option>'
+      +'<option value="Low"'   +(bv==='Low'   ?' selected':'')+'>🔴 Low</option>'
+      +'</select></div>';
+  }
+
+  CHECKS.forEach(function(ck){
+    h+='<div class="grid-label-check">'+ck.l+'</div>';
+    for(var i=0;i<COLS;i++){
+      h+='<div class="ck-cell'+(data[i][ck.k]?' checked':'')+'" onclick="toggleCk('+i+',\''+ck.k+'\',this)"><span class="ck-mark">✔</span></div>';
+    }
+  });
+
+  h+='<div class="grid-label-inspector">ผู้ตรวจสอบ</div>';
+  for(var i=0;i<COLS;i++){
+    h+='<div class="grid-cell-inspector"><input type="text" value="'+ea(data[i].inspector||'')+'" oninput="updateVal('+i+',\'inspector\',this.value)"></div>';
+  }
+
+  card.innerHTML=h;
+}
+
+function ea(s){return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');}
+function updateVal(i,f,v){var k=shiftKey();if(formData[k])formData[k].columns[i][f]=v;}
+function setReady(v){var k=shiftKey();if(formData[k])formData[k].readyStatus=v;}
+function toggleCk(i,f,el){var k=shiftKey();if(formData[k]){formData[k].columns[i][f]=!formData[k].columns[i][f];el.classList.toggle('checked');}}
+
+function saveShift() {
+  var date=document.getElementById('globalDate').value;
+  var key=shiftKey();
+  var payload=Object.assign({},formData[key],{date:date,shift:currentShift,round:currentRound,ward:currentWard});
+  wardRef(dbKeyFor(date)).set(payload).then(function(){
+    var st=document.getElementById('status-main');
+    st.style.opacity='1';
+    setTimeout(function(){st.style.opacity='0';},2000);
+  }).catch(function(e){alert('บันทึกไม่สำเร็จ: '+e.message);});
+}
+function clearShift(){
+  openModal('ล้างข้อมูลของ '+SHIFT_LABELS[shiftKey()]+'?',function(){
+    formData[shiftKey()]=emptyEntry();
+    document.getElementsByName('ready_main').forEach(function(r){r.checked=false;});
+    renderCard();
+  });
+}
+
+function loadHistory(){
+  var month=document.getElementById('historyMonth').value;
+  var list=document.getElementById('historyList');
+  list.innerHTML='<p style="padding:20px;color:#888">กำลังโหลด...</p>';
+  wardRef('').get().then(function(snap){
+    list.innerHTML='';
+    if(!snap.exists()){list.innerHTML='<p style="text-align:center;padding:20px;color:#999">ไม่พบข้อมูลประวัติ</p>';return;}
+    var val=snap.val();
+    var allData=Object.values(val).filter(function(d){return d.date&&d.date.startsWith(month);});
+    var byDate={};
+    allData.forEach(function(d){if(!byDate[d.date])byDate[d.date]=[];byDate[d.date].push(d);});
+    var dates=Object.keys(byDate).sort().reverse();
+    if(!dates.length){list.innerHTML='<p style="text-align:center;padding:20px;color:#999">ไม่พบข้อมูลในเดือนนี้</p>';return;}
+    dates.forEach(function(date){
+      var dayDiv=document.createElement('div');
+      dayDiv.style='margin-bottom:20px;border:1px solid var(--border);background:#fff;border-radius:8px;overflow:hidden';
+      var entries=byDate[date].slice().sort(function(a,b){
+        var so=(a.shift==='day'?0:1)-(b.shift==='day'?0:1);
+        return so!==0?so:(a.round||1)-(b.round||1);
+      });
+      var h='<div style="background:var(--navy);color:#fff;padding:10px 15px;display:flex;justify-content:space-between;align-items:center;">'
+           +'<span style="font-weight:bold">📅 '+fmtThai(date)+'</span>'
+           +'<button class="btn-del-sm" style="background:var(--red);color:#fff" onclick="deleteDay(\''+date+'\')">ลบทั้งวัน</button>'
+           +'</div>';
+      entries.forEach(function(d){
+        var lbl=SHIFT_LABELS[(d.shift||'day')+'-'+(d.round||1)]||d.shift;
+        var rooms=Object.values(d.columns).filter(function(c){return c.room;});
+        var k2=d.date+'_'+d.shift+'_r'+(d.round||1);
+        h+='<div style="background:#f9f9f9;padding:8px 15px;border-bottom:1px solid #eee;display:flex;justify-content:space-between;align-items:center;">'
+          +'<span style="font-size:.85rem;font-weight:700;color:var(--navy)">'+lbl+' (สถานะ: '+(d.readyStatus||'-')+')</span>'
+          +'<div style="display:flex;gap:5px">'
+          +'<button class="btn-edit-sm" onclick="editEntry(\''+d.date+'\',\''+d.shift+'\','+(d.round||1)+')">แก้ไข</button>'
+          +'<button class="btn-del-sm" onclick="deleteEntry(\''+k2+'\')">ลบ</button>'
+          +'</div></div>';
+        if(rooms.length){
+          h+='<div class="table-responsive"><table class="room-table-hist"><thead><tr>'
+            +'<th>ห้อง</th><th>เบอร์กระดุม</th><th>เวลา</th><th>แบต</th>'
+            +'<th>GW</th><th>Wifi</th><th>ติดกระดุม</th><th>Sensor</th><th>ระยะ</th><th>ผู้ตรวจ</th>'
+            +'</tr></thead><tbody>';
+          rooms.forEach(function(c){
+            h+='<tr><td><b>'+(c.room||'-')+'</b></td><td>'+(c.device||'-')+'</td><td>'+(c.time||'-')+'</td><td>'+(c.battery||'-')+'</td>'
+              +'<td>'+(c.gateway?'<span class="dot-check">✔</span>':'-')+'</td>'
+              +'<td>'+(c.wifi   ?'<span class="dot-check">✔</span>':'-')+'</td>'
+              +'<td>'+(c.attach ?'<span class="dot-check">✔</span>':'-')+'</td>'
+              +'<td>'+(c.sensor ?'<span class="dot-check">✔</span>':'-')+'</td>'
+              +'<td>'+(c.dist   ?'<span class="dot-check">✔</span>':'-')+'</td>'
+              +'<td>'+(c.inspector||'-')+'</td></tr>';
+          });
+          h+='</tbody></table></div>';
+        }
+      });
+      dayDiv.innerHTML=h; list.appendChild(dayDiv);
+    });
+  }).catch(function(e){document.getElementById('historyList').innerHTML='<p style="padding:20px;color:red">โหลดไม่สำเร็จ: '+e.message+'</p>';});
+}
+
+function loadSummary(type){
+  type=type||'month';
+  var m=document.getElementById('summaryMonth').value;
+  var dDay=document.getElementById('summaryDate').value;
+  var content=document.getElementById('summaryContent');
+  content.innerHTML='<p style="padding:20px;color:#888">กำลังโหลด...</p>';
+  wardRef('').get().then(function(snap){
+    if(!snap.exists()){content.innerHTML='<p style="text-align:center;padding:20px;">ไม่มีข้อมูล</p>';return;}
+    var filtered=Object.values(snap.val()).filter(function(d){
+      return type==='day'?d.date===dDay:(d.date&&d.date.startsWith(m));
+    });
+    filtered.sort(function(a,b){
+      var dc=a.date.localeCompare(b.date);
+      if(dc!==0)return dc;
+      var so=(a.shift==='day'?0:1)-(b.shift==='day'?0:1);
+      return so!==0?so:(a.round||1)-(b.round||1);
+    });
+    var h='<table class="room-table-hist" style="min-width:100%"><thead><tr style="background:var(--navy);color:#fff">'
+         +'<th style="width:160px">วันที่/กะ/รอบ</th><th>Room</th><th>เบอร์กระดุม</th>'
+         +'<th>แบตเตอรี่</th><th>ผู้ตรวจสอบ</th><th>ความพร้อมใช้งาน</th>'
+         +'</tr></thead><tbody>';
+    if(!filtered.length) h+='<tr><td colspan="6" style="padding:20px;color:#999">ไม่พบข้อมูลในช่วงเวลาที่เลือก</td></tr>';
+    filtered.forEach(function(d){
+      var rows=Object.values(d.columns).filter(function(c){return c.room;});
+      var lbl=SHIFT_LABELS[(d.shift||'day')+'-'+(d.round||1)]||d.shift;
+      rows.forEach(function(c,idx){
+        h+='<tr>'
+          +'<td style="font-size:.7rem;color:#666">'+(idx===0?'<b>'+d.date+'</b><br>'+lbl:'')+'</td>'
+          +'<td><b>'+(c.room||'-')+'</b></td><td>'+(c.device||'-')+'</td>'
+          +'<td style="color:'+(c.battery==='Low'?'red':c.battery==='Medium'?'orange':'green')+'">'+(c.battery||'-')+'</td>'
+          +'<td>'+(c.inspector||'-')+'</td>'
+          +'<td style="font-weight:bold;color:'+(d.readyStatus==='พร้อมใช้'?'#1a7a3c':'#C0272D')+'">'+(d.readyStatus||'-')+'</td>'
+          +'</tr>';
+      });
+    });
+    content.innerHTML=h+'</tbody></table>';
+  }).catch(function(e){content.innerHTML='<p style="padding:20px;color:red">โหลดไม่สำเร็จ: '+e.message+'</p>';});
+}
+
+function deleteDay(date){
+  openModal('ลบข้อมูล "ทุกกะ" ของวันที่ '+fmtThai(date)+' ใช่หรือไม่?',function(){
+    wardRef('').get().then(function(snap){
+      if(!snap.exists())return;
+      var keys=Object.keys(snap.val()).filter(function(k){return k.startsWith(date);});
+      Promise.all(keys.map(function(k){return wardRef(k).remove();})).then(loadHistory);
     });
   });
-  content.innerHTML = h + `</tbody></table>`;
-};
+}
+function deleteMonth(){
+  var m=document.getElementById('historyMonth').value;
+  openModal('⚠️ ยืนยันลบข้อมูลทั้งหมดของเดือน '+m+'?',function(){
+    wardRef('').get().then(function(snap){
+      if(!snap.exists())return;
+      var keys=Object.keys(snap.val()).filter(function(k){return k.startsWith(m);});
+      Promise.all(keys.map(function(k){return wardRef(k).remove();})).then(loadHistory);
+    });
+  });
+}
+function deleteEntry(key){
+  openModal('ลบข้อมูลรอบนี้ใช่หรือไม่?',function(){wardRef(key).remove().then(loadHistory);});
+}
+function editEntry(d,s,r){
+  document.getElementById('globalDate').value=d;
+  selectShiftRound(s,r); showPage('form');
+}
 
-window.deleteDay = (date) => openModal(`ลบข้อมูล "ทุกกะ" ของวันที่ ${fmtThai(date)} ใช่หรือไม่?`, async () => {
-  const snap = await get(ref(db, 'bedExitAlarm'));
-  const keys = Object.keys(snap.val()).filter(k => k.startsWith(date));
-  for(let k of keys) await remove(ref(db, `bedExitAlarm/${k}`));
-  loadHistory();
-});
-window.deleteMonth = () => {
-  const m = document.getElementById('historyMonth').value;
-  openModal(`⚠️ ยืนยันลบข้อมูลทั้งหมดของเดือน ${m}?`, async () => {
-    const snap = await get(ref(db, 'bedExitAlarm'));
-    const keys = Object.keys(snap.val()).filter(k => k.includes(m));
-    for(let k of keys) await remove(ref(db, `bedExitAlarm/${k}`));
-    loadHistory();
+function showPage(p){
+  ['form','history','summary'].forEach(function(id){
+    document.getElementById('page-'+id).style.display=(id===p?'block':'none');
+    document.getElementById('nav-'+id).classList.toggle('active',id===p);
   });
-};
-window.deleteEntry = (key) => openModal('ลบข้อมูลกะนี้ใช่หรือไม่?', async () => { await remove(ref(db, `bedExitAlarm/${key}`)); loadHistory(); });
-window.editEntry = (d, s) => { document.getElementById('globalDate').value = d; showPage('form'); onDateChange(); };
-window.showPage = (p) => {
-  ['form','history','summary'].forEach(id => {
-    document.getElementById('page-'+id).style.display = (id===p?'block':'none');
-    document.getElementById('nav-'+id).classList.toggle('active', id===p);
-  });
-  document.getElementById('date-bar-container').style.display = (p==='form'?'flex':'none');
-  if(p==='history') loadHistory();
-  if(p==='summary') loadSummary('month');
-};
-window.openModal = (msg, onConfirm) => {
-  document.getElementById('confirmMsg').innerText = msg;
-  const btn = document.getElementById('confirmOkBtn');
-  btn.onclick = () => { onConfirm(); closeModal(); };
+  var isForm=p==='form';
+  document.getElementById('date-bar-container').style.display=isForm?'flex':'none';
+  document.getElementById('shift-bar').style.display=isForm?'flex':'none';
+  if(p==='history')loadHistory();
+  if(p==='summary')loadSummary('month');
+}
+function openModal(msg,cb){
+  document.getElementById('confirmMsg').innerText=msg;
+  var btn=document.getElementById('confirmOkBtn');
+  btn.onclick=function(){cb();closeModal();};
   document.getElementById('confirmModal').classList.add('open');
-};
-window.closeModal = () => document.getElementById('confirmModal').classList.remove('open');
-window.changeDate = (delta) => {
-  const inp = document.getElementById('globalDate');
-  const d = new Date(inp.value+'T12:00:00');
-  d.setDate(d.getDate() + delta);
-  inp.value = d.toISOString().split('T')[0];
+}
+function closeModal(){document.getElementById('confirmModal').classList.remove('open');}
+function changeDate(delta){
+  var inp=document.getElementById('globalDate');
+  var d=new Date(inp.value+'T12:00:00');
+  d.setDate(d.getDate()+delta);
+  inp.value=d.toISOString().split('T')[0];
   onDateChange();
-};
-function fmtThai(ds){ const d = new Date(ds+'T12:00:00'); return `${d.getDate()} ${THAI_MONTHS[d.getMonth()]} ${d.getFullYear()+543}`; }
-function updateDateDisplay(){ const d = new Date(document.getElementById('globalDate').value+'T12:00:00'); document.getElementById('dateDisplay').innerText = `วันที่ ${d.getDate()} ${THAI_MONTHS[d.getMonth()]} ${d.getFullYear()+543}`; }
+}
+function fmtThai(ds){var d=new Date(ds+'T12:00:00');return d.getDate()+' '+THAI_MONTHS[d.getMonth()]+' '+(d.getFullYear()+543);}
+function updateDateDisplay(){var d=new Date(document.getElementById('globalDate').value+'T12:00:00');document.getElementById('dateDisplay').innerText='วันที่ '+d.getDate()+' '+THAI_MONTHS[d.getMonth()]+' '+(d.getFullYear()+543);}
 
-const today = new Date().toISOString().split('T')[0];
-document.getElementById('globalDate').value = today;
-document.getElementById('historyMonth').value = today.substring(0,7);
-document.getElementById('summaryMonth').value = today.substring(0,7);
-document.getElementById('summaryDate').value = today;
-onDateChange();
+(function(){
+  var saved=sessionStorage.getItem('bea_ward');
+  if(saved&&WARD_ACCOUNTS[saved]){
+    currentWard=saved;
+    document.getElementById('login-page').style.display='none';
+    document.getElementById('app-page').style.display='block';
+    document.getElementById('ward-badge').textContent='🏥 '+saved.toUpperCase();
+    initApp();
+  }
+})();
 </script>
 </body>
 </html>
