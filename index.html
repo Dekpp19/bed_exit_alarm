@@ -13,11 +13,12 @@
   --accent:#E8EEF8;--gray-header:#4A6FA5;
   --border:#C5D3E8;--bg:#EDF1F7;
   --text:#1a2a3a;--green:#1a7a3c;--green-bg:#E6F4EC;
-  --col-label:300px;--col-data:72px;
+  --col-label:300px;--col-data:80px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
 
+/* ── LOGIN ── */
 #login-page{min-height:100vh;display:flex;align-items:center;justify-content:center;
   background:linear-gradient(135deg,var(--navy) 0%,var(--navy2) 100%);padding:20px}
 .login-box{background:#fff;border-radius:14px;padding:32px 28px;width:100%;max-width:360px;
@@ -36,6 +37,7 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
   font-size:13px;color:#c62828;margin-top:10px;text-align:center;display:none}
 .login-error.show{display:block}
 
+/* ── TOPBAR ── */
 .topbar{background:linear-gradient(135deg,var(--navy) 0%,var(--navy2) 100%);color:#fff;
   padding:12px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;
   box-shadow:0 2px 12px rgba(0,0,0,.25);position:sticky;top:0;z-index:100}
@@ -54,6 +56,7 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
   color:rgba(255,255,255,.9);font-size:11px;font-weight:700;padding:2px 10px;border-radius:20px;
   letter-spacing:.5px;margin-left:4px}
 
+/* ── SHIFT / DATE BAR ── */
 .shift-bar{background:#fff;border-bottom:2px solid var(--border);padding:10px 20px;
   display:flex;align-items:center;gap:12px;flex-wrap:wrap}
 .sg-label{font-size:.8rem;font-weight:700;color:#666;white-space:nowrap}
@@ -75,38 +78,24 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
   padding:5px 10px;cursor:pointer;font-size:.9rem;color:var(--navy)}
 .date-display{font-size:.85rem;font-weight:600;color:var(--navy2)}
 
+/* ── MAIN ── */
 .main{max-width:1500px;margin:0 auto;padding:20px 16px 48px}
 
-/* ── scroll wrapper (เพิ่มเฉพาะส่วนนี้) ── */
-.table-scroll-wrap{
-  width:100%;
-  overflow-x:auto;
-  -webkit-overflow-scrolling:touch;
-  border:1px solid var(--border);
-  border-radius:4px 4px 0 0;
-  margin-bottom:0;
-}
+/* ── TABLE SCROLL ── */
+.table-scroll-wrap{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;
+  border:1px solid var(--border);border-radius:4px 4px 0 0;margin-bottom:0}
 .table-scroll-wrap::-webkit-scrollbar{height:7px}
 .table-scroll-wrap::-webkit-scrollbar-track{background:#dce6f4}
 .table-scroll-wrap::-webkit-scrollbar-thumb{background:var(--navy2);border-radius:4px}
 
-.scroll-hint-bar{
-  background:#dce6f4;
-  border:1px solid var(--border);
-  border-top:none;
-  padding:5px 14px;
-  font-size:.75rem;
-  color:var(--navy);
-  font-weight:600;
-  display:none;
-  align-items:center;
-  gap:5px;
-}
+.scroll-hint-bar{background:#dce6f4;border:1px solid var(--border);border-top:none;
+  padding:5px 14px;font-size:.75rem;color:var(--navy);font-weight:600;
+  display:none;align-items:center;gap:5px}
 .scroll-hint-bar .arr{animation:slidearr 1.2s ease-in-out infinite}
 @keyframes slidearr{0%,100%{transform:translateX(0)}50%{transform:translateX(6px)}}
 @media(max-width:960px){.scroll-hint-bar{display:flex}}
 
-/* ── form-card: เหมือนต้นฉบับทุกอย่าง ── */
+/* ── FORM CARD GRID ── */
 .form-card{
   width:calc(var(--col-label) + 14*var(--col-data) + 2px);
   min-width:calc(var(--col-label) + 14*var(--col-data) + 2px);
@@ -114,6 +103,14 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
   display:grid;
   grid-template-columns:var(--col-label) repeat(14,var(--col-data));
 }
+
+/* Column header row (กระดุมที่ 1-14) */
+.grid-col-header{background:var(--navy2);color:#fff;font-size:.75rem;font-weight:700;
+  padding:8px 4px;text-align:center;border-right:1px solid rgba(255,255,255,.2);
+  border-bottom:1px solid rgba(255,255,255,.15)}
+.grid-col-header-label{background:var(--navy);color:#fff;font-size:.8rem;font-weight:700;
+  padding:8px 14px;display:flex;align-items:center;
+  border-right:1px solid rgba(255,255,255,.2);border-bottom:1px solid rgba(255,255,255,.15)}
 
 .grid-section-header{grid-column:1/-1;background:var(--navy);color:#fff;padding:10px 14px;
   font-size:.85rem;font-weight:700;border-bottom:1px solid rgba(255,255,255,.12)}
@@ -124,7 +121,7 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
   min-height:40px;line-height:1.35}
 .grid-label-check{background:#f8faff;color:var(--text);font-size:.75rem;font-weight:500;
   padding:10px;display:flex;align-items:center;border-right:1px solid var(--border);
-  border-bottom:1px solid var(--border);min-height:48px;line-height:1.4}
+  border-bottom:1px solid var(--border);min-height:52px;line-height:1.4}
 .grid-label-battery{background:#f0f5ff;color:var(--navy);font-size:.78rem;font-weight:700;
   padding:0 10px;display:flex;align-items:center;justify-content:flex-end;text-align:right;
   border-right:1px solid var(--border);border-bottom:1px solid var(--border);min-height:40px}
@@ -138,14 +135,14 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
 .grid-cell-input input[type=date],.grid-cell-input input[type=time]{padding:2px;font-size:.63rem}
 
 .ck-cell{border-right:1px solid var(--border);border-bottom:1px solid var(--border);
-  display:flex;align-items:center;justify-content:center;cursor:pointer;min-height:48px;background:#fff}
+  display:flex;align-items:center;justify-content:center;cursor:pointer;min-height:52px;background:#fff}
 .ck-cell.checked{background:var(--green-bg)}
 .ck-mark{font-size:1.2rem;color:var(--green);display:none;font-weight:800}
 .ck-cell.checked .ck-mark{display:block}
 
 .grid-cell-battery{border-right:1px solid var(--border);border-bottom:1px solid var(--border);
   display:flex;align-items:center;justify-content:center;background:#f9fbff}
-.grid-cell-battery select{font-size:.63rem;width:92%;font-family:'Sarabun',sans-serif;
+.grid-cell-battery select{font-size:.63rem;width:90%;font-family:'Sarabun',sans-serif;
   border:1px solid #ccd;border-radius:3px;padding:2px}
 
 .grid-cell-inspector{border-right:1px solid var(--border);border-bottom:1px solid var(--border);background:#f0f5ff}
@@ -161,12 +158,14 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
   display:flex;gap:20px;font-size:.85rem;color:var(--navy);font-weight:bold;
   align-items:center;border-radius:0 0 4px 4px}
 
+/* ── HISTORY ── */
 .room-table-hist{width:100%;border-collapse:collapse;background:#fff}
 .room-table-hist th{background:var(--gray-header);color:#fff;padding:9px 8px;font-size:.75rem;
   text-align:center;border:1px solid rgba(255,255,255,.2)}
 .room-table-hist td{padding:8px;font-size:.8rem;border:1px solid #ddd;text-align:center}
 .dot-check{color:var(--green);font-weight:bold}
 
+/* ── MODAL ── */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:999;display:none;
   align-items:center;justify-content:center;padding:20px}
 .modal-overlay.open{display:flex}
@@ -180,10 +179,17 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
   border-radius:4px;cursor:pointer;font-size:.75rem;font-weight:bold}
 .table-responsive{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;
   margin-bottom:0;border:1px solid var(--border);border-radius:4px 4px 0 0}
+
+/* ── LOADING / EMPTY STATE ── */
+.state-msg{padding:30px;text-align:center;color:#999;font-size:.9rem}
+.loading-spinner{display:inline-block;width:18px;height:18px;border:3px solid #ccc;
+  border-top-color:var(--navy);border-radius:50%;animation:spin .7s linear infinite;margin-right:8px;vertical-align:middle}
+@keyframes spin{to{transform:rotate(360deg)}}
 </style>
 </head>
 <body>
 
+<!-- ── LOGIN PAGE ── -->
 <div id="login-page">
   <div class="login-box">
     <div class="login-logo">
@@ -204,6 +210,7 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
   </div>
 </div>
 
+<!-- ── APP PAGE ── -->
 <div id="app-page" style="display:none">
   <div class="topbar">
     <div class="topbar-title">
@@ -247,13 +254,17 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
     <span class="date-display" id="dateDisplay"></span>
   </div>
 
+  <!-- ── FORM PAGE ── -->
   <div id="page-form" class="main">
     <div class="shift-page-header">
       <span class="shift-badge day" id="current-shift-badge">☀️ กะเช้า รอบที่ 1 (07:00–13:00)</span>
+      <span id="status-main" style="color:var(--green);font-weight:700;opacity:0;transition:.4s">✅ บันทึกแล้ว</span>
     </div>
 
     <div class="table-scroll-wrap">
-      <div class="form-card" id="card-main"></div>
+      <div class="form-card" id="card-main">
+        <div class="state-msg" style="grid-column:1/-1"><span class="loading-spinner"></span>กำลังโหลด...</div>
+      </div>
     </div>
     <div class="scroll-hint-bar">
       <span class="arr">→</span> เลื่อนซ้าย-ขวาเพื่อดูกระดุมทั้งหมด (14 ช่อง)
@@ -267,41 +278,43 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
     <div style="margin-top:10px;display:flex;gap:10px;align-items:center;margin-bottom:40px">
       <button class="nav-btn" style="background:var(--navy)" onclick="saveShift()">💾 บันทึก</button>
       <button class="nav-btn" style="background:#fff;color:var(--navy);border:1px solid var(--border)" onclick="clearShift()">🗑 ล้าง</button>
-      <span id="status-main" style="color:var(--green);font-weight:700;opacity:0;transition:.4s">✅ บันทึกแล้ว</span>
     </div>
   </div>
 
+  <!-- ── HISTORY PAGE ── -->
   <div id="page-history" class="main" style="display:none">
     <div style="background:#fff;padding:15px;border-radius:8px;border:1px solid var(--border);
       margin-bottom:15px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
-      <div>
-        <label style="font-size:.8rem;font-weight:bold;color:var(--navy)">📅 เลือกเดือนประวัติ:</label>
+      <div style="display:flex;align-items:center;gap:10px">
+        <label style="font-size:.85rem;font-weight:bold;color:var(--navy)">📅 เลือกเดือน:</label>
         <input type="month" id="historyMonth" onchange="loadHistory()"
-          style="padding:6px;border-radius:5px;border:1px solid var(--border)"/>
+          style="padding:6px;border-radius:5px;border:1px solid var(--border);font-family:'Sarabun',sans-serif"/>
       </div>
       <button class="btn-del-main" onclick="deleteMonth()">🗑 ลบข้อมูลทั้งเดือน</button>
     </div>
-    <div id="historyList"></div>
+    <div id="historyList"><div class="state-msg">เลือกเดือนเพื่อดูประวัติ</div></div>
   </div>
 
+  <!-- ── SUMMARY PAGE ── -->
   <div id="page-summary" class="main" style="display:none">
     <div style="background:#fff;padding:15px;border-radius:8px;border:1px solid var(--border);
-      margin-bottom:15px;display:flex;gap:20px;flex-wrap:wrap;">
-      <div>
-        <label style="font-weight:bold">📊 สรุปรายงานเดือน:</label>
+      margin-bottom:15px;display:flex;gap:20px;flex-wrap:wrap;align-items:center">
+      <div style="display:flex;align-items:center;gap:8px">
+        <label style="font-weight:bold;font-size:.85rem">📊 สรุปรายเดือน:</label>
         <input type="month" id="summaryMonth" onchange="loadSummary('month')"
-          style="padding:6px;border-radius:5px;border:1px solid var(--border)"/>
+          style="padding:6px;border-radius:5px;border:1px solid var(--border);font-family:'Sarabun',sans-serif"/>
       </div>
-      <div>
-        <label style="font-weight:bold">📅 หรือระบุรายวัน:</label>
+      <div style="display:flex;align-items:center;gap:8px">
+        <label style="font-weight:bold;font-size:.85rem">📅 หรือรายวัน:</label>
         <input type="date" id="summaryDate" onchange="loadSummary('day')"
-          style="padding:6px;border-radius:5px;border:1px solid var(--border)"/>
+          style="padding:6px;border-radius:5px;border:1px solid var(--border);font-family:'Sarabun',sans-serif"/>
       </div>
     </div>
-    <div id="summaryContent" class="table-responsive"></div>
+    <div id="summaryContent" style="overflow-x:auto"></div>
   </div>
 </div>
 
+<!-- ── CONFIRM MODAL ── -->
 <div class="modal-overlay" id="confirmModal">
   <div class="modal-box">
     <h3 style="color:var(--navy);margin-bottom:10px">⚠️ ยืนยันการดำเนินการ</h3>
@@ -314,353 +327,622 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
 </div>
 
 <script>
+// ─────────────────────────────────────────────
+//  WARD ACCOUNTS  (เพิ่ม/แก้ได้ที่นี่)
+// ─────────────────────────────────────────────
 var WARD_ACCOUNTS = {
-  "ward14e":"password1","ward15":"password2","ward16":"password3",
-  "icu":"password4","er":"password5"
+  "ward14e" : "password1",
+  "ward15"  : "password2",
+  "ward16"  : "password3",
+  "icu"     : "password4",
+  "er"      : "password5"
 };
 
+// ─────────────────────────────────────────────
+//  FIREBASE
+// ─────────────────────────────────────────────
 firebase.initializeApp({
-  apiKey:"AIzaSyC2Z2vTVhzepWHtE4F9g1df97itPMGfOyA",
-  authDomain:"bed-exit-alarm.firebaseapp.com",
-  databaseURL:"https://bed-exit-alarm-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId:"bed-exit-alarm",
-  storageBucket:"bed-exit-alarm.firebasestorage.app",
-  messagingSenderId:"405252502824",
-  appId:"1:405252502824:web:237ac2475c74841116cc1d"
+  apiKey           : "AIzaSyC2Z2vTVhzepWHtE4F9g1df97itPMGfOyA",
+  authDomain       : "bed-exit-alarm.firebaseapp.com",
+  databaseURL      : "https://bed-exit-alarm-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId        : "bed-exit-alarm",
+  storageBucket    : "bed-exit-alarm.firebasestorage.app",
+  messagingSenderId: "405252502824",
+  appId            : "1:405252502824:web:237ac2475c74841116cc1d"
 });
 var db = firebase.database();
 
+// ─────────────────────────────────────────────
+//  CONSTANTS
+// ─────────────────────────────────────────────
 var COLS = 14;
-var THAI_MONTHS = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน',
-  'กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+var THAI_MONTHS = [
+  'มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน',
+  'กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'
+];
 var CHECKS = [
-  {k:'gateway',l:'เช็คการเชื่อมต่อระหว่าง Gateway และ Sensor (กระดุม) หากไม่เชื่อมต่อ ให้เช็คว่าเครื่องไอแพดเปิดบลูทูธอยู่หรือไม่'},
-  {k:'wifi',   l:'เช็คการเชื่อมต่อ wifi'},
-  {k:'attach', l:'เช็คการติดกระดุมถูกต้องหรือไม่'},
-  {k:'sensor', l:'เช็คการเปิด-ปิด ของ Sensor (กระดุม)'},
-  {k:'dist',   l:'เช็คระยะห่าง ระหว่าง Gateway และ Sensor (กระดุม) ไม่ควรห่างเกิน 8-10 เมตร เพราะเป็นระยะของบลูทูธ'}
+  {k:'gateway', l:'เช็คการเชื่อมต่อระหว่าง Gateway และ Sensor (กระดุม) หากไม่เชื่อมต่อ ให้เช็คว่าเครื่องไอแพดเปิดบลูทูธอยู่หรือไม่'},
+  {k:'wifi',    l:'เช็คการเชื่อมต่อ WiFi'},
+  {k:'attach',  l:'เช็คการติดกระดุมถูกต้องหรือไม่'},
+  {k:'sensor',  l:'เช็คการเปิด-ปิด ของ Sensor (กระดุม)'},
+  {k:'dist',    l:'เช็คระยะห่าง ระหว่าง Gateway และ Sensor (กระดุม) ไม่ควรห่างเกิน 8-10 เมตร (Bluetooth)'}
 ];
 var SHIFT_LABELS = {
-  'day-1':'☀️ กะเช้า รอบที่ 1 (07:00–13:00)',
-  'day-2':'☀️ กะเช้า รอบที่ 2 (13:00–19:00)',
-  'night-1':'🌙 กะดึก รอบที่ 1 (19:00–01:00)',
-  'night-2':'🌙 กะดึก รอบที่ 2 (01:00–07:00)'
+  'day-1'  : '☀️ กะเช้า รอบที่ 1 (07:00–13:00)',
+  'day-2'  : '☀️ กะเช้า รอบที่ 2 (13:00–19:00)',
+  'night-1': '🌙 กะดึก รอบที่ 1 (19:00–01:00)',
+  'night-2': '🌙 กะดึก รอบที่ 2 (01:00–07:00)'
 };
 
+// ─────────────────────────────────────────────
+//  STATE
+// ─────────────────────────────────────────────
 var currentWard  = null;
 var currentShift = 'day';
 var currentRound = 1;
-var formData     = {};
+var formData     = {};   // cache: key = shiftKey()
 
-function shiftKey()     { return currentShift+'-'+currentRound; }
-function dbKeyFor(date) { return date+'_'+currentShift+'_r'+currentRound; }
-function wardRef(path)  { return db.ref('wards/'+currentWard+'/bedExitAlarm/'+path); }
+// ─────────────────────────────────────────────
+//  HELPERS
+// ─────────────────────────────────────────────
+function shiftKey()     { return currentShift + '-' + currentRound; }
+
+/** Firebase key for a given date+shift+round  e.g. "2025-06-01_day_r1" */
+function dbKeyFor(date) { return date + '_' + currentShift + '_r' + currentRound; }
+
+/** Reference into this ward's bedExitAlarm node */
+function wardRef(path) {
+  var base = 'wards/' + currentWard + '/bedExitAlarm';
+  return path ? db.ref(base + '/' + path) : db.ref(base);
+}
 
 function emptyCols() {
   var r = {};
-  for (var i=0;i<COLS;i++)
-    r[i]={device:'',room:'',date:'',time:'',battery:'',
-          gateway:false,wifi:false,attach:false,sensor:false,dist:false,inspector:''};
+  for (var i = 0; i < COLS; i++) {
+    r[i] = {device:'', room:'', date:'', time:'', battery:'',
+             gateway:false, wifi:false, attach:false, sensor:false, dist:false, inspector:''};
+  }
   return r;
 }
-function emptyEntry() { return {columns:emptyCols(),readyStatus:''}; }
+function emptyEntry() { return {columns: emptyCols(), readyStatus: ''}; }
 
+function ea(s) {
+  return String(s || '')
+    .replace(/&/g,'&amp;').replace(/"/g,'&quot;')
+    .replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function fmtThai(ds) {
+  var d = new Date(ds + 'T12:00:00');
+  return d.getDate() + ' ' + THAI_MONTHS[d.getMonth()] + ' ' + (d.getFullYear() + 543);
+}
+
+// ─────────────────────────────────────────────
+//  AUTH
+// ─────────────────────────────────────────────
 function doLogin() {
   var user = document.getElementById('login-user').value.trim().toLowerCase();
   var pass = document.getElementById('login-pass').value;
   var err  = document.getElementById('login-error');
-  if (WARD_ACCOUNTS[user] && WARD_ACCOUNTS[user]===pass) {
+  if (WARD_ACCOUNTS[user] && WARD_ACCOUNTS[user] === pass) {
     currentWard = user;
     sessionStorage.setItem('bea_ward', user);
     err.classList.remove('show');
     document.getElementById('login-page').style.display = 'none';
     document.getElementById('app-page').style.display   = 'block';
-    document.getElementById('ward-badge').textContent   = '🏥 '+user.toUpperCase();
+    document.getElementById('ward-badge').textContent   = '🏥 ' + user.toUpperCase();
     initApp();
-  } else { err.classList.add('show'); }
+  } else {
+    err.classList.add('show');
+  }
 }
+
 function doLogout() {
   if (!confirm('ออกจากระบบใช่ไหม?')) return;
   currentWard = null;
+  formData    = {};
   sessionStorage.removeItem('bea_ward');
-  document.getElementById('app-page').style.display  = 'none';
+  document.getElementById('app-page').style.display   = 'none';
   document.getElementById('login-page').style.display = 'flex';
   document.getElementById('login-user').value = '';
   document.getElementById('login-pass').value = '';
 }
-document.getElementById('login-pass').addEventListener('keydown',function(e){if(e.key==='Enter')doLogin();});
 
+document.getElementById('login-pass').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') doLogin();
+});
+
+// ─────────────────────────────────────────────
+//  APP INIT
+// ─────────────────────────────────────────────
 function initApp() {
   var today = new Date().toISOString().split('T')[0];
-  document.getElementById('globalDate').value   = today;
-  document.getElementById('historyMonth').value = today.substring(0,7);
-  document.getElementById('summaryMonth').value = today.substring(0,7);
-  document.getElementById('summaryDate').value  = today;
-  currentShift='day'; currentRound=1; formData={};
-  updateTabStyles(); updateShiftBadge(); onDateChange();
+  var ym    = today.substring(0, 7);
+  document.getElementById('globalDate').value    = today;
+  document.getElementById('historyMonth').value  = ym;
+  document.getElementById('summaryMonth').value  = ym;
+  document.getElementById('summaryDate').value   = today;
+  currentShift = 'day';
+  currentRound = 1;
+  formData     = {};
+  updateTabStyles();
+  updateShiftBadge();
+  updateDateDisplay();
+  loadCurrentShift();
 }
 
+// ─────────────────────────────────────────────
+//  SHIFT / DATE CONTROLS
+// ─────────────────────────────────────────────
 function selectShiftRound(shift, round) {
-  currentShift=shift; currentRound=round;
-  updateTabStyles(); updateShiftBadge(); loadCurrentShift();
+  currentShift = shift;
+  currentRound = round;
+  updateTabStyles();
+  updateShiftBadge();
+  loadCurrentShift();
 }
+
 function updateTabStyles() {
-  ['day-1','day-2','night-1','night-2'].forEach(function(k){
-    var p=k.split('-'), s=p[0], r=parseInt(p[1]);
-    var el=document.getElementById('tab-'+s+'-'+r);
-    if(el) el.className='shift-tab '+s+(s===currentShift&&r===currentRound?' active':'');
+  ['day-1','day-2','night-1','night-2'].forEach(function(k) {
+    var parts = k.split('-');
+    var s = parts[0], r = parseInt(parts[1]);
+    var el = document.getElementById('tab-' + s + '-' + r);
+    if (el) el.className = 'shift-tab ' + s + (s === currentShift && r === currentRound ? ' active' : '');
   });
 }
+
 function updateShiftBadge() {
-  var b=document.getElementById('current-shift-badge');
-  b.textContent=SHIFT_LABELS[shiftKey()];
-  b.className='shift-badge '+currentShift;
+  var b = document.getElementById('current-shift-badge');
+  b.textContent = SHIFT_LABELS[shiftKey()];
+  b.className   = 'shift-badge ' + currentShift;
 }
 
-function onDateChange() { updateDateDisplay(); formData={}; loadCurrentShift(); }
+function updateDateDisplay() {
+  var val = document.getElementById('globalDate').value;
+  if (!val) return;
+  var d = new Date(val + 'T12:00:00');
+  document.getElementById('dateDisplay').innerText =
+    'วันที่ ' + d.getDate() + ' ' + THAI_MONTHS[d.getMonth()] + ' ' + (d.getFullYear() + 543);
+}
 
+function onDateChange() {
+  updateDateDisplay();
+  formData = {};          // ล้าง cache เมื่อเปลี่ยนวัน
+  loadCurrentShift();
+}
+
+function changeDate(delta) {
+  var inp = document.getElementById('globalDate');
+  var d   = new Date(inp.value + 'T12:00:00');
+  d.setDate(d.getDate() + delta);
+  inp.value = d.toISOString().split('T')[0];
+  onDateChange();
+}
+
+// ─────────────────────────────────────────────
+//  LOAD / RENDER FORM
+// ─────────────────────────────────────────────
 function loadCurrentShift() {
   var date = document.getElementById('globalDate').value;
-  var key  = shiftKey();
-  wardRef(dbKeyFor(date)).get().then(function(snap){
-    formData[key] = snap.exists() ? snap.val() : emptyEntry();
-    if (!formData[key].columns) formData[key].columns = emptyCols();
-    document.getElementsByName('ready_main').forEach(function(r){
-      r.checked = (r.value===formData[key].readyStatus);
+  if (!date) return;
+  var key = shiftKey();
+
+  // แสดง loading
+  document.getElementById('card-main').innerHTML =
+    '<div class="state-msg" style="grid-column:1/-1"><span class="loading-spinner"></span>กำลังโหลด...</div>';
+
+  wardRef(dbKeyFor(date)).get().then(function(snap) {
+    if (snap.exists()) {
+      formData[key] = snap.val();
+      // ถ้า columns เป็น array หรือ object เก่า ให้แปลง
+      if (!formData[key].columns) formData[key].columns = emptyCols();
+      // ทำให้ index เป็น 0-13 เสมอ (Firebase อาจส่งเป็น object)
+      var cols = formData[key].columns;
+      var normalized = {};
+      for (var i = 0; i < COLS; i++) {
+        normalized[i] = cols[i] || cols[String(i)] || {
+          device:'', room:'', date:'', time:'', battery:'',
+          gateway:false, wifi:false, attach:false, sensor:false, dist:false, inspector:''
+        };
+      }
+      formData[key].columns = normalized;
+    } else {
+      formData[key] = emptyEntry();
+    }
+    // ตั้ง radio readyStatus
+    var rv = formData[key].readyStatus || '';
+    document.getElementsByName('ready_main').forEach(function(r) {
+      r.checked = (r.value === rv);
     });
     renderCard();
-  }).catch(function(){
-    formData[key]=emptyEntry(); renderCard();
+  }).catch(function(err) {
+    console.error('loadCurrentShift error:', err);
+    formData[key] = emptyEntry();
+    renderCard();
   });
 }
 
 function renderCard() {
   var card = document.getElementById('card-main');
   var key  = shiftKey();
-  if (!formData[key]) formData[key]=emptyEntry();
+  if (!formData[key]) formData[key] = emptyEntry();
   var data = formData[key].columns;
   var date = document.getElementById('globalDate').value;
-  var h='';
+  var h = '';
 
-  [{l:'เบอร์กระดุม',f:'device',t:'text'},
-   {l:'Room',f:'room',t:'text'},
-   {l:'Date',f:'date',t:'date'},
-   {l:'Time',f:'time',t:'time'}].forEach(function(row){
-    h+='<div class="grid-label">'+row.l+'</div>';
-    for(var i=0;i<COLS;i++){
-      var v=ea(data[i][row.f]||(row.f==='date'?date:''));
-      h+='<div class="grid-cell-input"><input type="'+row.t+'" value="'+v+'" oninput="updateVal('+i+',\''+row.f+'\',this.value)"></div>';
+  // ── แถวหัว: เลขกระดุม 1-14 ──
+  h += '<div class="grid-col-header-label">รายการตรวจสอบ / กระดุมที่</div>';
+  for (var i = 0; i < COLS; i++) {
+    h += '<div class="grid-col-header">' + (i + 1) + '</div>';
+  }
+
+  // ── แถว input ──
+  var inputRows = [
+    {l:'เบอร์กระดุม', f:'device', t:'text'},
+    {l:'Room',        f:'room',   t:'text'},
+    {l:'Date',        f:'date',   t:'date'},
+    {l:'Time',        f:'time',   t:'time'}
+  ];
+  inputRows.forEach(function(row) {
+    h += '<div class="grid-label">' + row.l + '</div>';
+    for (var i = 0; i < COLS; i++) {
+      var defVal = (row.f === 'date') ? date : '';
+      var v = ea(data[i][row.f] || defVal);
+      h += '<div class="grid-cell-input"><input type="' + row.t + '" value="' + v + '" '
+         + 'oninput="updateVal(' + i + ',\'' + row.f + '\',this.value)"></div>';
     }
   });
 
-  h+='<div class="grid-section-header">ตรวจสอบการใช้งานของ Bed Exit Alarm</div>';
+  // ── Section: ตรวจสอบ ──
+  h += '<div class="grid-section-header">ตรวจสอบการใช้งานของ Bed Exit Alarm</div>';
 
-  h+='<div class="grid-label-battery">เช็คแบตเตอรี่ สถานะ</div>';
-  for(var i=0;i<COLS;i++){
-    var bv=data[i].battery||'';
-    h+='<div class="grid-cell-battery"><select onchange="updateVal('+i+',\'battery\',this.value)">'
-      +'<option value="">-</option>'
-      +'<option value="High"'  +(bv==='High'  ?' selected':'')+'>🟢 High</option>'
-      +'<option value="Medium"'+(bv==='Medium'?' selected':'')+'>🟡 Med</option>'
-      +'<option value="Low"'   +(bv==='Low'   ?' selected':'')+'>🔴 Low</option>'
-      +'</select></div>';
+  // ── แบตเตอรี่ ──
+  h += '<div class="grid-label-battery">เช็คแบตเตอรี่</div>';
+  for (var i = 0; i < COLS; i++) {
+    var bv = data[i].battery || '';
+    h += '<div class="grid-cell-battery"><select onchange="updateVal(' + i + ',\'battery\',this.value)">'
+       + '<option value="">–</option>'
+       + '<option value="High"'   + (bv === 'High'   ? ' selected' : '') + '>🟢 High</option>'
+       + '<option value="Medium"' + (bv === 'Medium' ? ' selected' : '') + '>🟡 Med</option>'
+       + '<option value="Low"'    + (bv === 'Low'    ? ' selected' : '') + '>🔴 Low</option>'
+       + '</select></div>';
   }
 
-  CHECKS.forEach(function(ck){
-    h+='<div class="grid-label-check">'+ck.l+'</div>';
-    for(var i=0;i<COLS;i++){
-      h+='<div class="ck-cell'+(data[i][ck.k]?' checked':'')+'" onclick="toggleCk('+i+',\''+ck.k+'\',this)"><span class="ck-mark">✔</span></div>';
+  // ── Checkboxes ──
+  CHECKS.forEach(function(ck) {
+    h += '<div class="grid-label-check">' + ck.l + '</div>';
+    for (var i = 0; i < COLS; i++) {
+      var checked = data[i][ck.k] ? ' checked' : '';
+      h += '<div class="ck-cell' + checked + '" onclick="toggleCk(' + i + ',\'' + ck.k + '\',this)">'
+         + '<span class="ck-mark">✔</span></div>';
     }
   });
 
-  h+='<div class="grid-label-inspector">ผู้ตรวจสอบ</div>';
-  for(var i=0;i<COLS;i++){
-    h+='<div class="grid-cell-inspector"><input type="text" value="'+ea(data[i].inspector||'')+'" oninput="updateVal('+i+',\'inspector\',this.value)"></div>';
+  // ── ผู้ตรวจสอบ ──
+  h += '<div class="grid-label-inspector">ผู้ตรวจสอบ</div>';
+  for (var i = 0; i < COLS; i++) {
+    h += '<div class="grid-cell-inspector"><input type="text" value="' + ea(data[i].inspector || '') + '" '
+       + 'oninput="updateVal(' + i + ',\'inspector\',this.value)"></div>';
   }
 
-  card.innerHTML=h;
+  card.innerHTML = h;
 }
 
-function ea(s){return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');}
-function updateVal(i,f,v){var k=shiftKey();if(formData[k])formData[k].columns[i][f]=v;}
-function setReady(v){var k=shiftKey();if(formData[k])formData[k].readyStatus=v;}
-function toggleCk(i,f,el){var k=shiftKey();if(formData[k]){formData[k].columns[i][f]=!formData[k].columns[i][f];el.classList.toggle('checked');}}
+// ─────────────────────────────────────────────
+//  FORM INTERACTIONS
+// ─────────────────────────────────────────────
+function updateVal(i, f, v) {
+  var k = shiftKey();
+  if (formData[k]) formData[k].columns[i][f] = v;
+}
 
+function setReady(v) {
+  var k = shiftKey();
+  if (formData[k]) formData[k].readyStatus = v;
+}
+
+function toggleCk(i, f, el) {
+  var k = shiftKey();
+  if (formData[k]) {
+    formData[k].columns[i][f] = !formData[k].columns[i][f];
+    el.classList.toggle('checked');
+  }
+}
+
+// ─────────────────────────────────────────────
+//  SAVE / CLEAR
+// ─────────────────────────────────────────────
 function saveShift() {
-  var date=document.getElementById('globalDate').value;
-  var key=shiftKey();
-  var payload=Object.assign({},formData[key],{date:date,shift:currentShift,round:currentRound,ward:currentWard});
-  wardRef(dbKeyFor(date)).set(payload).then(function(){
-    var st=document.getElementById('status-main');
-    st.style.opacity='1';
-    setTimeout(function(){st.style.opacity='0';},2000);
-  }).catch(function(e){alert('บันทึกไม่สำเร็จ: '+e.message);});
+  var date = document.getElementById('globalDate').value;
+  if (!date) { alert('กรุณาเลือกวันที่'); return; }
+  var key = shiftKey();
+  if (!formData[key]) { alert('ไม่มีข้อมูลในหน้านี้'); return; }
+
+  var payload = {
+    columns     : formData[key].columns,
+    readyStatus : formData[key].readyStatus || '',
+    date        : date,
+    shift       : currentShift,
+    round       : currentRound,
+    ward        : currentWard,
+    savedAt     : new Date().toISOString()
+  };
+
+  wardRef(dbKeyFor(date)).set(payload).then(function() {
+    var st = document.getElementById('status-main');
+    st.style.opacity = '1';
+    setTimeout(function() { st.style.opacity = '0'; }, 2500);
+  }).catch(function(e) {
+    alert('❌ บันทึกไม่สำเร็จ\n' + e.message +
+          '\n\nกรุณาตรวจสอบ Firebase Database Rules ให้อนุญาตการเขียน');
+  });
 }
-function clearShift(){
-  openModal('ล้างข้อมูลของ '+SHIFT_LABELS[shiftKey()]+'?',function(){
-    formData[shiftKey()]=emptyEntry();
-    document.getElementsByName('ready_main').forEach(function(r){r.checked=false;});
+
+function clearShift() {
+  openModal('ล้างข้อมูลของ ' + SHIFT_LABELS[shiftKey()] + ' ใช่หรือไม่?', function() {
+    var k = shiftKey();
+    formData[k] = emptyEntry();
+    document.getElementsByName('ready_main').forEach(function(r) { r.checked = false; });
     renderCard();
   });
 }
 
-function loadHistory(){
-  var month=document.getElementById('historyMonth').value;
-  var list=document.getElementById('historyList');
-  list.innerHTML='<p style="padding:20px;color:#888">กำลังโหลด...</p>';
-  wardRef('').get().then(function(snap){
-    list.innerHTML='';
-    if(!snap.exists()){list.innerHTML='<p style="text-align:center;padding:20px;color:#999">ไม่พบข้อมูลประวัติ</p>';return;}
-    var val=snap.val();
-    var allData=Object.values(val).filter(function(d){return d.date&&d.date.startsWith(month);});
-    var byDate={};
-    allData.forEach(function(d){if(!byDate[d.date])byDate[d.date]=[];byDate[d.date].push(d);});
-    var dates=Object.keys(byDate).sort().reverse();
-    if(!dates.length){list.innerHTML='<p style="text-align:center;padding:20px;color:#999">ไม่พบข้อมูลในเดือนนี้</p>';return;}
-    dates.forEach(function(date){
-      var dayDiv=document.createElement('div');
-      dayDiv.style='margin-bottom:20px;border:1px solid var(--border);background:#fff;border-radius:8px;overflow:hidden';
-      var entries=byDate[date].slice().sort(function(a,b){
-        var so=(a.shift==='day'?0:1)-(b.shift==='day'?0:1);
-        return so!==0?so:(a.round||1)-(b.round||1);
+// ─────────────────────────────────────────────
+//  HISTORY PAGE
+// ─────────────────────────────────────────────
+function loadHistory() {
+  var month = document.getElementById('historyMonth').value;
+  if (!month) return;
+  var list = document.getElementById('historyList');
+  list.innerHTML = '<div class="state-msg"><span class="loading-spinner"></span>กำลังโหลด...</div>';
+
+  wardRef().get().then(function(snap) {
+    if (!snap.exists()) {
+      list.innerHTML = '<div class="state-msg">ไม่พบข้อมูลประวัติ</div>';
+      return;
+    }
+
+    var val = snap.val();
+    // กรองเฉพาะ key ที่ขึ้นต้นด้วยเดือนที่เลือก
+    var entries = [];
+    Object.keys(val).forEach(function(k) {
+      var d = val[k];
+      if (d && d.date && d.date.startsWith(month)) entries.push(d);
+    });
+
+    if (!entries.length) {
+      list.innerHTML = '<div class="state-msg">ไม่พบข้อมูลในเดือน ' + month + '</div>';
+      return;
+    }
+
+    // จัดกลุ่มตามวัน
+    var byDate = {};
+    entries.forEach(function(d) {
+      if (!byDate[d.date]) byDate[d.date] = [];
+      byDate[d.date].push(d);
+    });
+
+    list.innerHTML = '';
+    Object.keys(byDate).sort().reverse().forEach(function(date) {
+      var dayEntries = byDate[date].slice().sort(function(a, b) {
+        var so = (a.shift === 'day' ? 0 : 1) - (b.shift === 'day' ? 0 : 1);
+        return so !== 0 ? so : ((a.round || 1) - (b.round || 1));
       });
-      var h='<div style="background:var(--navy);color:#fff;padding:10px 15px;display:flex;justify-content:space-between;align-items:center;">'
-           +'<span style="font-weight:bold">📅 '+fmtThai(date)+'</span>'
-           +'<button class="btn-del-sm" style="background:var(--red);color:#fff" onclick="deleteDay(\''+date+'\')">ลบทั้งวัน</button>'
-           +'</div>';
-      entries.forEach(function(d){
-        var lbl=SHIFT_LABELS[(d.shift||'day')+'-'+(d.round||1)]||d.shift;
-        var rooms=Object.values(d.columns).filter(function(c){return c.room;});
-        var k2=d.date+'_'+d.shift+'_r'+(d.round||1);
-        h+='<div style="background:#f9f9f9;padding:8px 15px;border-bottom:1px solid #eee;display:flex;justify-content:space-between;align-items:center;">'
-          +'<span style="font-size:.85rem;font-weight:700;color:var(--navy)">'+lbl+' (สถานะ: '+(d.readyStatus||'-')+')</span>'
-          +'<div style="display:flex;gap:5px">'
-          +'<button class="btn-edit-sm" onclick="editEntry(\''+d.date+'\',\''+d.shift+'\','+(d.round||1)+')">แก้ไข</button>'
-          +'<button class="btn-del-sm" onclick="deleteEntry(\''+k2+'\')">ลบ</button>'
-          +'</div></div>';
-        if(rooms.length){
-          h+='<div class="table-responsive"><table class="room-table-hist"><thead><tr>'
-            +'<th>ห้อง</th><th>เบอร์กระดุม</th><th>เวลา</th><th>แบต</th>'
-            +'<th>GW</th><th>Wifi</th><th>ติดกระดุม</th><th>Sensor</th><th>ระยะ</th><th>ผู้ตรวจ</th>'
-            +'</tr></thead><tbody>';
-          rooms.forEach(function(c){
-            h+='<tr><td><b>'+(c.room||'-')+'</b></td><td>'+(c.device||'-')+'</td><td>'+(c.time||'-')+'</td><td>'+(c.battery||'-')+'</td>'
-              +'<td>'+(c.gateway?'<span class="dot-check">✔</span>':'-')+'</td>'
-              +'<td>'+(c.wifi   ?'<span class="dot-check">✔</span>':'-')+'</td>'
-              +'<td>'+(c.attach ?'<span class="dot-check">✔</span>':'-')+'</td>'
-              +'<td>'+(c.sensor ?'<span class="dot-check">✔</span>':'-')+'</td>'
-              +'<td>'+(c.dist   ?'<span class="dot-check">✔</span>':'-')+'</td>'
-              +'<td>'+(c.inspector||'-')+'</td></tr>';
+
+      var dayDiv = document.createElement('div');
+      dayDiv.style.cssText = 'margin-bottom:20px;border:1px solid var(--border);background:#fff;border-radius:8px;overflow:hidden';
+
+      var h = '<div style="background:var(--navy);color:#fff;padding:10px 15px;'
+            + 'display:flex;justify-content:space-between;align-items:center">'
+            + '<span style="font-weight:bold">📅 ' + fmtThai(date) + '</span>'
+            + '<button class="btn-del-sm" style="background:var(--red);color:#fff;border-color:var(--red)" '
+            + 'onclick="deleteDay(\'' + date + '\')">ลบทั้งวัน</button></div>';
+
+      dayEntries.forEach(function(d) {
+        var lbl  = SHIFT_LABELS[(d.shift || 'day') + '-' + (d.round || 1)] || d.shift;
+        var dbk  = d.date + '_' + d.shift + '_r' + (d.round || 1);
+        var cols = d.columns ? Object.values(d.columns) : [];
+        var rooms = cols.filter(function(c) { return c && c.room; });
+
+        h += '<div style="background:#f5f8ff;padding:9px 15px;border-bottom:1px solid #e0e8f5;'
+           + 'display:flex;justify-content:space-between;align-items:center">'
+           + '<span style="font-size:.85rem;font-weight:700;color:var(--navy)">'
+           + lbl + '  <span style="font-weight:400;color:#555">| สถานะ: '
+           + (d.readyStatus || '–') + '</span></span>'
+           + '<div style="display:flex;gap:6px">'
+           + '<button class="btn-edit-sm" onclick="editEntry(\'' + d.date + '\',\'' + d.shift + '\',' + (d.round || 1) + ')">✏️ แก้ไข</button>'
+           + '<button class="btn-del-sm" onclick="deleteEntry(\'' + dbk + '\')">🗑 ลบ</button>'
+           + '</div></div>';
+
+        if (rooms.length) {
+          h += '<div style="overflow-x:auto"><table class="room-table-hist"><thead><tr>'
+             + '<th>ห้อง</th><th>เบอร์กระดุม</th><th>เวลา</th><th>แบต</th>'
+             + '<th>GW</th><th>WiFi</th><th>ติดกระดุม</th><th>Sensor</th><th>ระยะ</th><th>ผู้ตรวจ</th>'
+             + '</tr></thead><tbody>';
+          rooms.forEach(function(c) {
+            var batColor = c.battery === 'Low' ? '#c62828' : c.battery === 'Medium' ? '#e65100' : '#1a7a3c';
+            h += '<tr>'
+               + '<td><b>' + ea(c.room || '–') + '</b></td>'
+               + '<td>' + ea(c.device || '–') + '</td>'
+               + '<td>' + ea(c.time || '–') + '</td>'
+               + '<td style="color:' + batColor + ';font-weight:bold">' + ea(c.battery || '–') + '</td>'
+               + '<td>' + (c.gateway ? '<span class="dot-check">✔</span>' : '–') + '</td>'
+               + '<td>' + (c.wifi    ? '<span class="dot-check">✔</span>' : '–') + '</td>'
+               + '<td>' + (c.attach  ? '<span class="dot-check">✔</span>' : '–') + '</td>'
+               + '<td>' + (c.sensor  ? '<span class="dot-check">✔</span>' : '–') + '</td>'
+               + '<td>' + (c.dist    ? '<span class="dot-check">✔</span>' : '–') + '</td>'
+               + '<td>' + ea(c.inspector || '–') + '</td>'
+               + '</tr>';
           });
-          h+='</tbody></table></div>';
+          h += '</tbody></table></div>';
+        } else {
+          h += '<div style="padding:10px 15px;font-size:.8rem;color:#999">– ยังไม่มีข้อมูลห้องในรอบนี้ –</div>';
         }
       });
-      dayDiv.innerHTML=h; list.appendChild(dayDiv);
+
+      dayDiv.innerHTML = h;
+      list.appendChild(dayDiv);
     });
-  }).catch(function(e){document.getElementById('historyList').innerHTML='<p style="padding:20px;color:red">โหลดไม่สำเร็จ: '+e.message+'</p>';});
+  }).catch(function(err) {
+    list.innerHTML = '<div class="state-msg" style="color:red">❌ โหลดไม่สำเร็จ: ' + err.message + '</div>';
+  });
 }
 
-function loadSummary(type){
-  type=type||'month';
-  var m=document.getElementById('summaryMonth').value;
-  var dDay=document.getElementById('summaryDate').value;
-  var content=document.getElementById('summaryContent');
-  content.innerHTML='<p style="padding:20px;color:#888">กำลังโหลด...</p>';
-  wardRef('').get().then(function(snap){
-    if(!snap.exists()){content.innerHTML='<p style="text-align:center;padding:20px;">ไม่มีข้อมูล</p>';return;}
-    var filtered=Object.values(snap.val()).filter(function(d){
-      return type==='day'?d.date===dDay:(d.date&&d.date.startsWith(m));
+// ─────────────────────────────────────────────
+//  SUMMARY PAGE
+// ─────────────────────────────────────────────
+function loadSummary(type) {
+  type = type || 'month';
+  var m    = document.getElementById('summaryMonth').value;
+  var dDay = document.getElementById('summaryDate').value;
+  var content = document.getElementById('summaryContent');
+  content.innerHTML = '<div class="state-msg"><span class="loading-spinner"></span>กำลังโหลด...</div>';
+
+  wardRef().get().then(function(snap) {
+    if (!snap.exists()) {
+      content.innerHTML = '<div class="state-msg">ไม่มีข้อมูลในระบบ</div>';
+      return;
+    }
+
+    var val = snap.val();
+    var filtered = Object.values(val).filter(function(d) {
+      if (!d || !d.date) return false;
+      return type === 'day' ? (d.date === dDay) : d.date.startsWith(m);
     });
-    filtered.sort(function(a,b){
-      var dc=a.date.localeCompare(b.date);
-      if(dc!==0)return dc;
-      var so=(a.shift==='day'?0:1)-(b.shift==='day'?0:1);
-      return so!==0?so:(a.round||1)-(b.round||1);
+
+    if (!filtered.length) {
+      content.innerHTML = '<div class="state-msg">ไม่พบข้อมูลในช่วงเวลาที่เลือก</div>';
+      return;
+    }
+
+    filtered.sort(function(a, b) {
+      var dc = a.date.localeCompare(b.date);
+      if (dc !== 0) return dc;
+      var so = (a.shift === 'day' ? 0 : 1) - (b.shift === 'day' ? 0 : 1);
+      return so !== 0 ? so : ((a.round || 1) - (b.round || 1));
     });
-    var h='<table class="room-table-hist" style="min-width:100%"><thead><tr style="background:var(--navy);color:#fff">'
-         +'<th style="width:160px">วันที่/กะ/รอบ</th><th>Room</th><th>เบอร์กระดุม</th>'
-         +'<th>แบตเตอรี่</th><th>ผู้ตรวจสอบ</th><th>ความพร้อมใช้งาน</th>'
-         +'</tr></thead><tbody>';
-    if(!filtered.length) h+='<tr><td colspan="6" style="padding:20px;color:#999">ไม่พบข้อมูลในช่วงเวลาที่เลือก</td></tr>';
-    filtered.forEach(function(d){
-      var rows=Object.values(d.columns).filter(function(c){return c.room;});
-      var lbl=SHIFT_LABELS[(d.shift||'day')+'-'+(d.round||1)]||d.shift;
-      rows.forEach(function(c,idx){
-        h+='<tr>'
-          +'<td style="font-size:.7rem;color:#666">'+(idx===0?'<b>'+d.date+'</b><br>'+lbl:'')+'</td>'
-          +'<td><b>'+(c.room||'-')+'</b></td><td>'+(c.device||'-')+'</td>'
-          +'<td style="color:'+(c.battery==='Low'?'red':c.battery==='Medium'?'orange':'green')+'">'+(c.battery||'-')+'</td>'
-          +'<td>'+(c.inspector||'-')+'</td>'
-          +'<td style="font-weight:bold;color:'+(d.readyStatus==='พร้อมใช้'?'#1a7a3c':'#C0272D')+'">'+(d.readyStatus||'-')+'</td>'
-          +'</tr>';
-      });
+
+    var h = '<table class="room-table-hist" style="min-width:900px"><thead><tr style="background:var(--navy)">'
+          + '<th style="text-align:left;min-width:140px">วันที่ / กะ</th>'
+          + '<th>Room</th><th>เบอร์กระดุม</th>'
+          + '<th>แบตเตอรี่</th><th>ผู้ตรวจสอบ</th><th>ความพร้อมใช้งาน</th>'
+          + '</tr></thead><tbody>';
+
+    filtered.forEach(function(d) {
+      var lbl  = SHIFT_LABELS[(d.shift || 'day') + '-' + (d.round || 1)] || d.shift;
+      var cols = d.columns ? Object.values(d.columns) : [];
+      var rooms = cols.filter(function(c) { return c && c.room; });
+      var readyColor = d.readyStatus === 'พร้อมใช้' ? '#1a7a3c' : '#C0272D';
+
+      if (!rooms.length) {
+        h += '<tr>'
+           + '<td style="font-size:.75rem;color:#555"><b>' + ea(d.date) + '</b><br>' + lbl + '</td>'
+           + '<td colspan="4" style="color:#aaa;font-size:.78rem">– ยังไม่มีข้อมูลห้อง –</td>'
+           + '<td style="font-weight:bold;color:' + readyColor + '">' + ea(d.readyStatus || '–') + '</td>'
+           + '</tr>';
+      } else {
+        rooms.forEach(function(c, idx) {
+          var batColor = c.battery === 'Low' ? '#c62828' : c.battery === 'Medium' ? '#e65100' : '#1a7a3c';
+          h += '<tr>'
+             + '<td style="font-size:.75rem;color:#555">'
+             + (idx === 0 ? '<b>' + ea(d.date) + '</b><br>' + lbl : '') + '</td>'
+             + '<td><b>' + ea(c.room || '–') + '</b></td>'
+             + '<td>' + ea(c.device || '–') + '</td>'
+             + '<td style="color:' + batColor + ';font-weight:bold">' + ea(c.battery || '–') + '</td>'
+             + '<td>' + ea(c.inspector || '–') + '</td>'
+             + '<td style="font-weight:bold;color:' + readyColor + '">'
+             + (idx === 0 ? ea(d.readyStatus || '–') : '') + '</td>'
+             + '</tr>';
+        });
+      }
     });
-    content.innerHTML=h+'</tbody></table>';
-  }).catch(function(e){content.innerHTML='<p style="padding:20px;color:red">โหลดไม่สำเร็จ: '+e.message+'</p>';});
+
+    content.innerHTML = h + '</tbody></table>';
+  }).catch(function(err) {
+    content.innerHTML = '<div class="state-msg" style="color:red">❌ โหลดไม่สำเร็จ: ' + err.message + '</div>';
+  });
 }
 
-function deleteDay(date){
-  openModal('ลบข้อมูล "ทุกกะ" ของวันที่ '+fmtThai(date)+' ใช่หรือไม่?',function(){
-    wardRef('').get().then(function(snap){
-      if(!snap.exists())return;
-      var keys=Object.keys(snap.val()).filter(function(k){return k.startsWith(date);});
-      Promise.all(keys.map(function(k){return wardRef(k).remove();})).then(loadHistory);
+// ─────────────────────────────────────────────
+//  DELETE OPERATIONS
+// ─────────────────────────────────────────────
+function deleteDay(date) {
+  openModal('ลบข้อมูล "ทุกกะ" ของวันที่ ' + fmtThai(date) + ' ใช่หรือไม่?', function() {
+    wardRef().get().then(function(snap) {
+      if (!snap.exists()) return;
+      var keys = Object.keys(snap.val()).filter(function(k) { return k.startsWith(date); });
+      Promise.all(keys.map(function(k) { return wardRef(k).remove(); })).then(loadHistory);
     });
   });
 }
-function deleteMonth(){
-  var m=document.getElementById('historyMonth').value;
-  openModal('⚠️ ยืนยันลบข้อมูลทั้งหมดของเดือน '+m+'?',function(){
-    wardRef('').get().then(function(snap){
-      if(!snap.exists())return;
-      var keys=Object.keys(snap.val()).filter(function(k){return k.startsWith(m);});
-      Promise.all(keys.map(function(k){return wardRef(k).remove();})).then(loadHistory);
+
+function deleteMonth() {
+  var m = document.getElementById('historyMonth').value;
+  if (!m) { alert('กรุณาเลือกเดือนก่อน'); return; }
+  openModal('⚠️ ยืนยันลบข้อมูลทั้งหมดของเดือน ' + m + ' ใช่หรือไม่?', function() {
+    wardRef().get().then(function(snap) {
+      if (!snap.exists()) return;
+      var keys = Object.keys(snap.val()).filter(function(k) { return k.startsWith(m); });
+      if (!keys.length) { alert('ไม่มีข้อมูลในเดือนนี้'); return; }
+      Promise.all(keys.map(function(k) { return wardRef(k).remove(); })).then(loadHistory);
     });
   });
 }
-function deleteEntry(key){
-  openModal('ลบข้อมูลรอบนี้ใช่หรือไม่?',function(){wardRef(key).remove().then(loadHistory);});
-}
-function editEntry(d,s,r){
-  document.getElementById('globalDate').value=d;
-  selectShiftRound(s,r); showPage('form');
+
+function deleteEntry(key) {
+  openModal('ลบข้อมูลรอบนี้ใช่หรือไม่?', function() {
+    wardRef(key).remove().then(loadHistory).catch(function(e) { alert('ลบไม่สำเร็จ: ' + e.message); });
+  });
 }
 
-function showPage(p){
-  ['form','history','summary'].forEach(function(id){
-    document.getElementById('page-'+id).style.display=(id===p?'block':'none');
-    document.getElementById('nav-'+id).classList.toggle('active',id===p);
-  });
-  var isForm=p==='form';
-  document.getElementById('date-bar-container').style.display=isForm?'flex':'none';
-  document.getElementById('shift-bar').style.display=isForm?'flex':'none';
-  if(p==='history')loadHistory();
-  if(p==='summary')loadSummary('month');
+function editEntry(d, s, r) {
+  document.getElementById('globalDate').value = d;
+  formData = {};   // ล้าง cache ก่อน load ใหม่
+  selectShiftRound(s, r);
+  showPage('form');
 }
-function openModal(msg,cb){
-  document.getElementById('confirmMsg').innerText=msg;
-  var btn=document.getElementById('confirmOkBtn');
-  btn.onclick=function(){cb();closeModal();};
+
+// ─────────────────────────────────────────────
+//  PAGE NAVIGATION
+// ─────────────────────────────────────────────
+function showPage(p) {
+  ['form', 'history', 'summary'].forEach(function(id) {
+    document.getElementById('page-' + id).style.display = (id === p) ? 'block' : 'none';
+    document.getElementById('nav-' + id).classList.toggle('active', id === p);
+  });
+  var isForm = (p === 'form');
+  document.getElementById('date-bar-container').style.display = isForm ? 'flex' : 'none';
+  document.getElementById('shift-bar').style.display          = isForm ? 'flex' : 'none';
+  if (p === 'history') loadHistory();
+  if (p === 'summary') loadSummary('month');
+}
+
+// ─────────────────────────────────────────────
+//  MODAL
+// ─────────────────────────────────────────────
+function openModal(msg, cb) {
+  document.getElementById('confirmMsg').innerText = msg;
+  var btn = document.getElementById('confirmOkBtn');
+  btn.onclick = function() { cb(); closeModal(); };
   document.getElementById('confirmModal').classList.add('open');
 }
-function closeModal(){document.getElementById('confirmModal').classList.remove('open');}
-function changeDate(delta){
-  var inp=document.getElementById('globalDate');
-  var d=new Date(inp.value+'T12:00:00');
-  d.setDate(d.getDate()+delta);
-  inp.value=d.toISOString().split('T')[0];
-  onDateChange();
+function closeModal() {
+  document.getElementById('confirmModal').classList.remove('open');
 }
-function fmtThai(ds){var d=new Date(ds+'T12:00:00');return d.getDate()+' '+THAI_MONTHS[d.getMonth()]+' '+(d.getFullYear()+543);}
-function updateDateDisplay(){var d=new Date(document.getElementById('globalDate').value+'T12:00:00');document.getElementById('dateDisplay').innerText='วันที่ '+d.getDate()+' '+THAI_MONTHS[d.getMonth()]+' '+(d.getFullYear()+543);}
+document.getElementById('confirmModal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
 
-(function(){
-  var saved=sessionStorage.getItem('bea_ward');
-  if(saved&&WARD_ACCOUNTS[saved]){
-    currentWard=saved;
-    document.getElementById('login-page').style.display='none';
-    document.getElementById('app-page').style.display='block';
-    document.getElementById('ward-badge').textContent='🏥 '+saved.toUpperCase();
+// ─────────────────────────────────────────────
+//  SESSION RESTORE
+// ─────────────────────────────────────────────
+(function() {
+  var saved = sessionStorage.getItem('bea_ward');
+  if (saved && WARD_ACCOUNTS[saved]) {
+    currentWard = saved;
+    document.getElementById('login-page').style.display = 'none';
+    document.getElementById('app-page').style.display   = 'block';
+    document.getElementById('ward-badge').textContent   = '🏥 ' + saved.toUpperCase();
     initApp();
   }
 })();
