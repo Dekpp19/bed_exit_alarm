@@ -854,7 +854,7 @@ function loadSummary(type) {
              + '<td style="color:' + batColor + ';font-weight:bold">' + ea(c.battery || '–') + '</td>'
              + '<td>' + ea(c.inspector || '–') + '</td>'
              + '<td style="font-weight:bold;color:' + readyColor + '">'
-             + (idx === 0 ? ea(d.readyStatus || '–') : '') + '</td>'
+             + ea(d.readyStatus || '–') + '</td>'
              + '</tr>';
         });
       }
